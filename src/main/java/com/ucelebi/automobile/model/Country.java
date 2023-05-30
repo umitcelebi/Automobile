@@ -1,0 +1,54 @@
+package com.ucelebi.automobile.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import java.util.List;
+
+@Entity
+public class Country extends Item{
+    @Column(nullable = false,unique = true)
+    private String code;
+    @Column(nullable = false)
+    private String name;
+
+    @OneToMany(mappedBy = "country")
+    private List<City> cities;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "country")
+    private List<Address> addresses;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+}
