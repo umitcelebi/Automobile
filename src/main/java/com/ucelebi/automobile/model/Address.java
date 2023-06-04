@@ -1,11 +1,13 @@
 package com.ucelebi.automobile.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class Address extends Item{
+    @Column(nullable = false, unique = true)
     private String code;
     private String postalCode;
     @ManyToOne
@@ -19,6 +21,19 @@ public class Address extends Item{
     private String line;
     @OneToOne(mappedBy = "address")
     private Partner partner;
+
+    public Address() {}
+
+    public Address(String code, String postalCode, Country country, City city, Town town, String streetName, String streetNumber, String line) {
+        this.code = code;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.city = city;
+        this.town = town;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
+        this.line = line;
+    }
 
     public String getCode() {
         return code;

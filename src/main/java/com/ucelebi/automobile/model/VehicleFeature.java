@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 public class VehicleFeature extends Item{
     private String brand;
     private String model;
-    private String year;
+    private String years;
     private String version;
     private String fuelType;
     private String gearType;
@@ -41,12 +41,12 @@ public class VehicleFeature extends Item{
         this.model = model;
     }
 
-    public String getYear() {
-        return year;
+    public String getYears() {
+        return years;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setYears(String year) {
+        this.years = year;
     }
 
     public String getVersion() {

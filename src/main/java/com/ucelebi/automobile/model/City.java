@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ public class City extends Item{
     private String name;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Country country;
 
     @OneToMany(mappedBy = "city")
@@ -24,6 +25,14 @@ public class City extends Item{
     @JsonIgnore
     @OneToMany(mappedBy = "city")
     private List<Address> addresses;
+
+    public City() {}
+
+    public City(String code, String name, Country country) {
+        this.code = code;
+        this.name = name;
+        this.country = country;
+    }
 
     public String getCode() {
         return code;

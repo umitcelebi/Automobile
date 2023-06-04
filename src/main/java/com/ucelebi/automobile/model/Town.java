@@ -21,6 +21,14 @@ public class Town extends Item{
     @OneToMany(mappedBy = "town")
     private List<Address> addresses;
 
+    public Town() {}
+
+    public Town(String code, String name, City city) {
+        this.code = code;
+        this.name = name;
+        this.city = city;
+    }
+
     public String getCode() {
         return code;
     }
