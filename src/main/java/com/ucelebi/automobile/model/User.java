@@ -11,25 +11,26 @@ import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "users")
 public abstract class User extends Item implements UserDetails {
 
     @Column(unique = true)
-    private String uid;
+    protected String uid;
     @Column(nullable = false)
-    private String name;
+    protected String name;
     @Column(nullable = false)
-    private String displayName;
-    private String password;
-    private String phoneNumber;
-    private String profilePhoto;
-    private Boolean isPhoneNumberVerified;
-    private Boolean isBlocked;
-    private Date blockedDate;
-    private String blockingDescription;
-    private Date lastLogin;
+    protected String displayName;
+    protected String password;
+    protected String phoneNumber;
+    protected String profilePhoto;
+    protected Boolean isPhoneNumberVerified;
+    protected Boolean isBlocked;
+    protected Date blockedDate;
+    protected String blockingDescription;
+    protected Date lastLogin;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    protected Role role;
 
     public String getUid() {
         return uid;
