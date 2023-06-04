@@ -48,7 +48,7 @@ public class AuthenticationService {
                     .displayName(request.getName())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(request.getRole())
-                    .buildCustomer();
+                    .build();
 
         } else if (request.getUserType().equals(UserType.KURUMSAL)) {
             user = new Partner.builder()
@@ -57,10 +57,10 @@ public class AuthenticationService {
                     .displayName(request.getName())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(request.getRole())
-                    .buildPartner();
-            ((Partner) user).setLatitude(request.getLatitude());
-            ((Partner) user).setLongitude(request.getLongitude());
-            ((Partner) user).setSundayOpen(request.isSundayOpen());
+                    .latitude(request.getLatitude())
+                    .longitude(request.getLongitude())
+                    .sundayOpen(request.isSundayOpen())
+                    .build();
 
             if (request.getSectors() != null && !request.getSectors().isEmpty()) {
                 for (String sector: request.getSectors()) {
