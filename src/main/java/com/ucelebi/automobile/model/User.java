@@ -14,13 +14,15 @@ import java.util.Date;
 @Table(name = "users")
 public abstract class User extends Item implements UserDetails {
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     protected String uid;
     @Column(nullable = false)
     protected String name;
     @Column(nullable = false)
     protected String displayName;
+    @Column(nullable = false)
     protected String password;
+    @Column(nullable = false)
     protected String phoneNumber;
     protected String profilePhoto;
     protected Boolean isPhoneNumberVerified;
