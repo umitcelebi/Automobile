@@ -18,6 +18,13 @@ public class Sector extends Item {
     inverseJoinColumns = @JoinColumn(name = "partner_id"))
     private List<Partner> partners;
 
+    public Sector() {}
+
+    public Sector(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     public String getCode() {
         return code;
     }
