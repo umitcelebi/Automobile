@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
+import java.sql.Timestamp;
+
 @Entity
 public class Address extends Item{
     @Column(nullable = false, unique = true)
@@ -25,6 +27,17 @@ public class Address extends Item{
     public Address() {}
 
     public Address(String code, String postalCode, Country country, City city, Town town, String streetName, String streetNumber, String line) {
+        this.code = code;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.city = city;
+        this.town = town;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
+        this.line = line;
+    }
+    public Address(Long id, Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String postalCode, Country country, City city, Town town, String streetName, String streetNumber, String line) {
+        super(id, creationTime, modifiedTime, active);
         this.code = code;
         this.postalCode = postalCode;
         this.country = country;

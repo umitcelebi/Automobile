@@ -21,6 +21,16 @@ public class Item {
 
     private boolean active;
 
+    public Item() {
+    }
+
+    public Item(Long id, Timestamp creationTime, Timestamp modifiedTime, boolean active) {
+        this.id = id;
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+    }
+
     public Long getId() {
         return id;
     }

@@ -80,7 +80,7 @@ public class AddressFacadeImpl implements AddressFacade {
     public AddressDTO update(AddressDTO entity) {
         Optional<Address> addressOptional = addressService.findByCode(entity.getCode());
         if (addressOptional.isEmpty()) {
-            return entity;
+            throw new IllegalStateException("Guncellenecek adres bilgisi bulunamadi.");
         }
         Optional<Country> countryByCode = countryService.findCountryByCode(entity.getCountryCode());
         Optional<City> cityByCode = cityService.findCityByCode(entity.getCityCode());

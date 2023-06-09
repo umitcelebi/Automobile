@@ -15,6 +15,26 @@ public class AddressDTO {
     private String streetNumber;
     private String line;
 
+    public AddressDTO() {}
+
+    public AddressDTO(String code,
+                      String postalCode,
+                      String countryCode,
+                      String cityCode,
+                      String townCode,
+                      String streetName,
+                      String streetNumber,
+                      String line) {
+        this.code = code;
+        this.postalCode = postalCode;
+        this.countryCode = countryCode;
+        this.cityCode = cityCode;
+        this.townCode = townCode;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
+        this.line = line;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime;
     }
