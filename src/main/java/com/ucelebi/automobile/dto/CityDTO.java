@@ -10,6 +10,17 @@ public class CityDTO {
     private String name;
     private String countryCode;
 
+    public CityDTO() {}
+
+    public CityDTO(Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name, String countryCode) {
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+        this.code = code;
+        this.name = name;
+        this.countryCode = countryCode;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime;
     }

@@ -4,7 +4,6 @@ import com.ucelebi.automobile.dto.CityDTO;
 import com.ucelebi.automobile.facade.CityFacade;
 import com.ucelebi.automobile.model.City;
 import com.ucelebi.automobile.service.CityService;
-import com.ucelebi.automobile.service.CountryService;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +20,12 @@ import java.util.stream.Collectors;
 public class CityFacadeImpl implements CityFacade {
 
     private final CityService cityService;
-    private final CountryService countryService;
     private final ModelMapper modelMapper;
     public static Logger log = Logger.getLogger(CityFacadeImpl.class);
 
     @Autowired
-    public CityFacadeImpl(CityService cityService, CountryService countryService, ModelMapper modelMapper) {
+    public CityFacadeImpl(CityService cityService, ModelMapper modelMapper) {
         this.cityService = cityService;
-        this.countryService = countryService;
         this.modelMapper = modelMapper;
     }
 
@@ -80,7 +77,7 @@ public class CityFacadeImpl implements CityFacade {
         City city = cityOptional.get();
         try {
             cityService.delete(city);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error while deleting city.", e);
         }
     }

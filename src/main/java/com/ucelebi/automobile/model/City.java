@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -27,6 +29,14 @@ public class City extends Item{
     private List<Address> addresses;
 
     public City() {}
+
+    public City(Long id, Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name, Country country, List<Town> towns) {
+        super(id, creationTime, modifiedTime, active);
+        this.code = code;
+        this.name = name;
+        this.country = country;
+        this.towns = towns;
+    }
 
     public City(String code, String name, Country country) {
         this.code = code;
