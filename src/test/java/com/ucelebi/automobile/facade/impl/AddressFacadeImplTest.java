@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 
 /**
@@ -326,6 +327,73 @@ class AddressFacadeImplTest {
         underTest.delete(addressDTO);
         //Then
         then(addressService).should(never()).delete(any());
+    }
+
+    @Test
+    void itShouldNotDeleteWhenThrowException() {
+        //Given
+        String addressCode = String.valueOf(System.currentTimeMillis());
+        String postalCode = "34000";
+        String streetName = "Osmanağa caddesi";
+        String streetNumber = "387.sokak No:22";
+
+        AddressDTO addressDTO = new AddressDTO(addressCode, postalCode, "TR", "34", "3419", streetName, streetNumber,"");
+        addressDTO.setActive(false);
+
+        Address address = new Address(1L, Timestamp.from(Instant.now()), Timestamp.from(Instant.now()), true, addressCode, postalCode, null, null, null, streetName, streetName, "");
+        given(addressService.findByCode(addressCode)).willReturn(Optional.of(address));
+
+        doThrow(RuntimeException.class).when(addressService).delete(address);
+        //When
+        //Then
+        underTest.delete(addressDTO);
+    }
+
+    @Test
+    void itShouldSelectByAddressCode() {
+        //Given
+        String postalCode = "34000";
+        String streetName = "Osmanağa caddesi";
+        String streetNumber = "387.sokak No:22";
+
+        Country country = new Country("TR", "Türkiye");
+        City city = new City("34", "Istanbul", null);
+        Town town = new Town("3419", "Kadıköy", null);
+
+        String addressCode = String.valueOf(System.currentTimeMillis());
+        Address address = new Address(1L,
+                Timestamp.from(Instant.now()),
+                Timestamp.from(Instant.now()),
+                true,
+                addressCode,
+                postalCode, country, city, town, streetName, streetNumber, "");
+
+        AddressDTO addressDTO = new AddressDTO(addressCode, postalCode, country.getCode(), city.getCode(), town.getCode(), streetName, streetNumber,"");
+
+        given(addressService.findByCode(addressCode)).willReturn(Optional.of(address));
+        given(modelMapper.map(address,AddressDTO.class))
+                .willReturn(addressDTO);
+
+        //When
+        Optional<AddressDTO> optionalAddress = underTest.findByCode(addressCode);
+
+        //Then
+        assertThat(optionalAddress)
+                .isPresent()
+                .hasValueSatisfying(a->assertThat(a).usingRecursiveComparison().isEqualTo(addressDTO));
+    }
+
+    @Test
+    void itShouldNotSelectByAddressCodeWhenAddressCodeDoesNotExist() {
+        //Given
+        String addressCode = "ADD23";
+        given(addressService.findByCode(addressCode)).willReturn(Optional.empty());
+
+        //When
+        Optional<AddressDTO> optionalAddress = underTest.findByCode(addressCode);
+
+        //Then
+        assertThat(optionalAddress).isNotPresent();
     }
 
 }

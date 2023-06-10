@@ -73,7 +73,12 @@ public class AddressFacadeImpl implements AddressFacade {
 
     @Override
     public Optional<AddressDTO> findByCode(String code) {
-        return Optional.empty();
+        Optional<Address> optionalAddress = addressService.findByCode(code);
+        if (optionalAddress.isEmpty()){
+            return Optional.empty();
+        }
+        AddressDTO addressDTO = modelMapper.map(optionalAddress.get(), AddressDTO.class);
+        return Optional.of(addressDTO);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class AddressFacadeImpl implements AddressFacade {
         Address address = addressOptional.get();
         try {
             addressService.delete(address);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error while deleting address.",e);
         }
     }
