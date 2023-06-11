@@ -11,6 +11,17 @@ public class CountryDTO {
     private String name;
     private List<CityDTO> cities;
 
+    public CountryDTO() {}
+
+    public CountryDTO(Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name, List<CityDTO> cities) {
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+        this.code = code;
+        this.name = name;
+        this.cities = cities;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime;
     }

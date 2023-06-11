@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -25,6 +27,13 @@ public class Country extends Item{
     public Country(String code, String name) {
         this.code = code;
         this.name = name;
+    }
+
+    public Country(Long id, Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name, List<City> cities) {
+        super(id, creationTime, modifiedTime, active);
+        this.code = code;
+        this.name = name;
+        this.cities = cities;
     }
 
     public String getCode() {
