@@ -32,6 +32,7 @@ class CustomerDaoTest {
                 .uid("umitcelebi@mail.com")
                 .name("Ümit")
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05344869880")
                 .build();
@@ -56,6 +57,7 @@ class CustomerDaoTest {
                 .uid(null)
                 .name("Ümit")
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05344869880")
                 .build();
@@ -75,6 +77,7 @@ class CustomerDaoTest {
                 .uid("umitcelebi@mail.com")
                 .name("Ümit")
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05345556688")
                 .build();
@@ -84,6 +87,7 @@ class CustomerDaoTest {
                 .uid("umitcelebi@mail.com")
                 .name("Celebi")
                 .displayName("Celebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05345556677")
                 .build();
@@ -102,6 +106,7 @@ class CustomerDaoTest {
                 .uid("umitcelebi1")
                 .name(null)
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05342223355")
                 .build();
@@ -121,6 +126,7 @@ class CustomerDaoTest {
                 .uid("umitcelebi1")
                 .name("Ümit")
                 .displayName(null)
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05342223355")
                 .build();
@@ -134,6 +140,46 @@ class CustomerDaoTest {
     }
 
     @Test
+    void itShouldNotSaveCustomerWhenPasswordNull() {
+        //Given
+        Customer customer = new Customer.builder()
+                .uid("umitcelebi1")
+                .name("Ümit")
+                .displayName("Ümit Çelebi")
+                .password(null)
+                .role(Role.CUSTOMER)
+                .phoneNumber("05342223355")
+                .build();
+
+        //When
+        //Then
+        assertThatThrownBy(()->underTest.save(customer))
+                .isInstanceOf(DataIntegrityViolationException.class)
+                .hasMessageContaining("not-null property references a null or transient value : com.ucelebi.automobile.model.Customer.password");
+
+    }
+
+    @Test
+    void itShouldNotSaveCustomerWhenPhoneNumberNull() {
+        //Given
+        Customer customer = new Customer.builder()
+                .uid("umitcelebi1")
+                .name("Ümit")
+                .displayName("Ümit Çelebi")
+                .password("12345678")
+                .role(Role.CUSTOMER)
+                .phoneNumber(null)
+                .build();
+
+        //When
+        //Then
+        assertThatThrownBy(()->underTest.save(customer))
+                .isInstanceOf(DataIntegrityViolationException.class)
+                .hasMessageContaining("not-null property references a null or transient value : com.ucelebi.automobile.model.Customer.phoneNumber");
+
+    }
+
+    @Test
     void itShouldSelectCustomerByUid() {
         //Given
         String customerUid = "ucelebi";
@@ -141,6 +187,7 @@ class CustomerDaoTest {
                 .uid(customerUid)
                 .name("Ümit")
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05344869880")
                 .build();
@@ -163,6 +210,7 @@ class CustomerDaoTest {
                 .uid("ucelebi")
                 .name("Ümit")
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05344869880")
                 .build();
@@ -182,6 +230,7 @@ class CustomerDaoTest {
                 .uid(customerUid)
                 .name("Ümit")
                 .displayName("Ümit Çelebi")
+                .password("password123")
                 .role(Role.CUSTOMER)
                 .phoneNumber("05344869880")
                 .build();
