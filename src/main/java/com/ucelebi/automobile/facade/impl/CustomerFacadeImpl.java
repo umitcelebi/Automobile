@@ -79,7 +79,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
         Customer customer = customerOptional.get();
         try {
             customerService.delete(customer);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error while deleting customer.", e);
         }
     }
@@ -88,7 +88,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public void deleteByUid(String uid) {
         try {
             customerService.deleteByUid(uid);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error while deleting customer", e);
         }
     }

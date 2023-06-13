@@ -20,10 +20,15 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 
 /**
  * User: ucelebi
@@ -247,5 +252,244 @@ class CustomerFacadeImplTest {
         //Then
         assertEquals(3,result.getTotalElements());
         assertThat(result.getContent()).isEqualTo(expected).isNotEqualTo(Collections.EMPTY_LIST);
+    }
+
+    @Test
+    void itShouldSelectCustomerByUid() {
+        //Given
+        String customerUid = "umitcelebi";
+        Timestamp creationTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+        Customer customer = new Customer.builder()
+                .creationTime(creationTime)
+                .modifiedTime(modifiedTime)
+                .active(true)
+                .uid("umitcelebi")
+                .password("1234")
+                .displayName("Ümit CELEBI")
+                .name("Ümit Çelebi")
+                .phoneNumber("05552223344")
+                .role(Role.CUSTOMER)
+                .profilePhoto(null)
+                .build();
+        CustomerDTO customerDTO = new CustomerDTO(creationTime,
+                modifiedTime,
+                true,
+                "umitcelebi",
+                "Ümit Çelebi",
+                "Ümit CELEBI",
+                "05552223344",
+                null,
+                Role.CUSTOMER);
+
+        given(customerService.findByUid(customerUid)).willReturn(Optional.ofNullable(customer));
+        given(modelMapper.map(customer,CustomerDTO.class))
+                .willReturn(customerDTO);
+        //When
+        CustomerDTO result = underTest.findByUid(customerUid);
+
+        //Then
+        assertThat(result).isEqualTo(customerDTO);
+    }
+
+    @Test
+    void itShouldNotSelectCustomerByUidWhenUidDoesNotExist() {
+        //Given
+        String customerUid = "umitcelebi";
+
+        given(customerService.findByUid(customerUid)).willReturn(Optional.empty());
+
+        //When
+        CustomerDTO result = underTest.findByUid(customerUid);
+
+        //Then
+        assertThat(result).isEqualTo(null);
+        then(modelMapper).should(never()).map(any(),any());
+    }
+
+    @Test
+    void itShouldUpdateSuccessfully() {
+        //Given
+        Timestamp createdTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+
+        CustomerDTO customerDTO = new CustomerDTO(null,
+                null,
+                false,
+                "umitclebi",
+                "Ümit",
+                "Çelebi Ümit",
+                "05445556677",
+                "/profile-photo/umitclebi.png",
+                Role.CUSTOMER);
+        Customer customer = new Customer.builder()
+                .creationTime(createdTime)
+                .modifiedTime(modifiedTime)
+                .active(true)
+                .uid("umitclebi")
+                .name("Ümit")
+                .displayName("Ümit Çelebi")
+                .phoneNumber("05445556633")
+                .profilePhoto("/profile-photo/umitclebi.png")
+                .role(Role.CUSTOMER)
+                .build();
+        Customer updatedCustomer = new Customer.builder()
+                .creationTime(createdTime)
+                .modifiedTime(modifiedTime)
+                .active(false)
+                .uid("umitclebi")
+                .name("Ümit")
+                .displayName("Çelebi Ümit")
+                .phoneNumber("05445556677")
+                .profilePhoto("/profile-photo/umitclebi.png")
+                .role(Role.CUSTOMER)
+                .build();
+        CustomerDTO updatedCustomerDTO = new CustomerDTO(createdTime,
+                modifiedTime,
+                false,
+                "umitclebi",
+                "Ümit",
+                "Çelebi Ümit",
+                "05445556677",
+                "/profile-photo/umitclebi.png",
+                Role.CUSTOMER);
+
+        given(customerService.findByUid(customerDTO.getUid())).willReturn(Optional.of(customer));
+        given(modelMapper.map(customerDTO,Customer.class)).willReturn(customer);
+        given(customerService.update(customer)).willReturn(updatedCustomer);
+        given(modelMapper.map(updatedCustomer,CustomerDTO.class)).willReturn(updatedCustomerDTO);
+        //When
+        CustomerDTO result = underTest.update(customerDTO);
+
+        //Then
+        assertEquals(result, updatedCustomerDTO);
+    }
+
+    @Test
+    void itShouldDeleteByCustomerDTO() {
+        //Given
+        Timestamp createdTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+
+        CustomerDTO customerDTO = new CustomerDTO(null,
+                null,
+                true,
+                "umitclebi",
+                "Ümit",
+                "Çelebi Ümit",
+                "05445556677",
+                "/profile-photo/umitclebi.png",
+                Role.CUSTOMER);
+        Customer customer = new Customer.builder()
+                .creationTime(createdTime)
+                .modifiedTime(modifiedTime)
+                .active(true)
+                .uid("umitclebi")
+                .name("Ümit")
+                .displayName("Çelebi Ümit")
+                .phoneNumber("05445556677")
+                .profilePhoto("/profile-photo/umitclebi.png")
+                .role(Role.CUSTOMER)
+                .build();
+
+        given(customerService.findByUid(customerDTO.getUid())).willReturn(Optional.ofNullable(customer));
+        //When
+        underTest.delete(customerDTO);
+
+        //Then
+        then(customerService).should().delete(customer);
+    }
+
+    @Test
+    void itShouldNotDeleteByCustomerDTOWhenCustomerDoesNotExist() {
+        //Given
+        CustomerDTO customerDTO = new CustomerDTO(null,
+                null,
+                true,
+                "umitclebi",
+                "Ümit",
+                "Çelebi Ümit",
+                "05445556677",
+                "/profile-photo/umitclebi.png",
+                Role.CUSTOMER);
+
+        given(customerService.findByUid(customerDTO.getUid())).willReturn(Optional.empty());
+        //When
+        underTest.delete(customerDTO);
+
+        //Then
+        then(customerService).should(never()).delete(any());
+    }
+
+    @Test
+    void itShouldNotDeleteByCustomerDTOWhenThrowException() {
+        //Given
+        CustomerDTO customerDTO = new CustomerDTO(null,
+                null,
+                true,
+                "umitclebi",
+                "Ümit",
+                "Çelebi Ümit",
+                "05445556677",
+                "/profile-photo/umitclebi.png",
+                Role.CUSTOMER);
+
+        Customer customer = new Customer.builder()
+                .creationTime(null)
+                .modifiedTime(null)
+                .active(true)
+                .uid("umitclebi")
+                .name("Ümit")
+                .displayName("Çelebi Ümit")
+                .phoneNumber("05445556677")
+                .profilePhoto("/profile-photo/umitclebi.png")
+                .role(Role.CUSTOMER)
+                .build();
+
+        given(customerService.findByUid(customerDTO.getUid())).willReturn(Optional.of(customer));
+        doThrow(RuntimeException.class).when(customerService).delete(customer);
+
+        //When
+        //Then
+        underTest.delete(customerDTO);
+
+    }
+
+    @Test
+    void itShouldDeleteByUid() {
+        //Given
+        String uid = "umitclebi";
+
+        //When
+        underTest.deleteByUid(uid);
+
+        //Then
+        then(customerService).should().deleteByUid(uid);
+    }
+
+    @Test
+    void itShouldNotDeleteByUidWhenThrowException() {
+        //Given
+        String uid = "ucelebi";
+
+        Customer customer = new Customer.builder()
+                .creationTime(null)
+                .modifiedTime(null)
+                .active(true)
+                .uid("umitclebi")
+                .name("Ümit")
+                .displayName("Çelebi Ümit")
+                .phoneNumber("05445556677")
+                .profilePhoto("/profile-photo/umitclebi.png")
+                .role(Role.CUSTOMER)
+                .build();
+
+        given(customerService.findByUid(uid)).willReturn(Optional.of(customer));
+        doThrow(RuntimeException.class).when(customerService).deleteByUid(uid);
+
+        //When
+        //Then
+        underTest.deleteByUid(uid);
+
     }
 }
