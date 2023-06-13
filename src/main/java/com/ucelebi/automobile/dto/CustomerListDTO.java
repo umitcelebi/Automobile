@@ -10,6 +10,22 @@ public class CustomerListDTO {
     private String displayName;
     private String profilePhoto;
 
+    public CustomerListDTO() {}
+
+    public CustomerListDTO(Timestamp creationTime,
+                           Timestamp modifiedTime,
+                           boolean active,
+                           String uid,
+                           String displayName,
+                           String profilePhoto) {
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+        this.uid = uid;
+        this.displayName = displayName;
+        this.profilePhoto = profilePhoto;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime;
     }

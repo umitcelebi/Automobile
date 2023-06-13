@@ -4,6 +4,8 @@ import com.ucelebi.automobile.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -11,6 +13,9 @@ public class Customer extends User{
     public Customer() {}
 
     public Customer(builder builder) {
+        this.creationTime = builder.creationTime;
+        this.modifiedTime = builder.modifiedTime;
+        this.active = builder.active;
         this.uid = builder.uid;
         this.name = builder.name;
         this.displayName = builder.displayName;
@@ -53,7 +58,9 @@ public class Customer extends User{
     }
 
     public static class builder{
-
+        private Timestamp creationTime;
+        private Timestamp modifiedTime;
+        private boolean active;
         private String uid;
         private String name;
         private String displayName;
@@ -62,6 +69,18 @@ public class Customer extends User{
         private Role role;
         private String profilePhoto;
 
+        public builder creationTime(Timestamp creationTime) {
+            this.creationTime = creationTime;
+            return this;
+        }
+        public builder modifiedTime(Timestamp modifiedTime) {
+            this.modifiedTime = modifiedTime;
+            return this;
+        }
+        public builder active(boolean active) {
+            this.active = active;
+            return this;
+        }
         public builder uid(String uid) {
             this.uid = uid;
             return this;

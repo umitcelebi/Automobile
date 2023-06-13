@@ -15,6 +15,27 @@ public class CustomerDTO {
     private String profilePhoto;
     private Role role;
 
+    public CustomerDTO() {}
+    public CustomerDTO(Timestamp creationTime,
+                       Timestamp modifiedTime,
+                       boolean active,
+                       String uid,
+                       String name,
+                       String displayName,
+                       String phoneNumber,
+                       String profilePhoto,
+                       Role role) {
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+        this.uid = uid;
+        this.name = name;
+        this.displayName = displayName;
+        this.phoneNumber = phoneNumber;
+        this.profilePhoto = profilePhoto;
+        this.role = role;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime;
     }

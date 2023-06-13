@@ -10,16 +10,16 @@ import java.sql.Timestamp;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @CreationTimestamp
     @Column(updatable = false)
-    private Timestamp creationTime;
+    protected Timestamp creationTime;
 
     @UpdateTimestamp
-    private Timestamp modifiedTime;
+    protected Timestamp modifiedTime;
 
-    private boolean active;
+    protected boolean active;
 
     public Item() {
     }
