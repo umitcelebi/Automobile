@@ -1,5 +1,7 @@
 package com.ucelebi.automobile.dto;
 
+import com.ucelebi.automobile.enums.Role;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -21,6 +23,47 @@ public class PartnerDTO {
     private List<ImageDTO> images;
     private AddressDTO address;
     private boolean sundayOpen;
+    private Role role;
+
+    public PartnerDTO() {}
+
+    public PartnerDTO(Timestamp creationTime,
+                      Timestamp modifiedTime,
+                      boolean active,
+                      String uid,
+                      String name,
+                      String displayName,
+                      String phoneNumber,
+                      String profilePhoto,
+                      Double userRating,
+                      Double latitude,
+                      Double longitude,
+                      List<ReviewDTO> reviews,
+                      List<SectorDTO> sectors,
+                      List<String> openingTimes,
+                      List<ImageDTO> images,
+                      AddressDTO address,
+                      boolean sundayOpen,
+                      Role role) {
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+        this.uid = uid;
+        this.name = name;
+        this.displayName = displayName;
+        this.phoneNumber = phoneNumber;
+        this.profilePhoto = profilePhoto;
+        this.userRating = userRating;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.reviews = reviews;
+        this.sectors = sectors;
+        this.openingTimes = openingTimes;
+        this.images = images;
+        this.address = address;
+        this.sundayOpen = sundayOpen;
+        this.role = role;
+    }
 
     public Timestamp getCreationTime() {
         return creationTime;
@@ -156,5 +199,13 @@ public class PartnerDTO {
 
     public void setSundayOpen(boolean sundayOpen) {
         this.sundayOpen = sundayOpen;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

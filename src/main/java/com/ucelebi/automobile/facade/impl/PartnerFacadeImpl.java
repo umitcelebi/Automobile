@@ -46,12 +46,12 @@ public class PartnerFacadeImpl implements PartnerFacade {
 
     @Override
     public Page<PartnerListDTO> findAll(Pageable pageable, PartnerFilter partnerFilter) {
-        if (!partnerFilter.getSectorCode().trim().isEmpty()) {
+        if (partnerFilter.getSectorCode() != null && !partnerFilter.getSectorCode().trim().isEmpty()) {
             return findAllBySectors(partnerFilter.getLatitude(), partnerFilter.getLongitude(),partnerFilter.getSectorCode(), pageable);
-        } else if (!partnerFilter.getTownCode().trim().isEmpty()) {
+        } else if (partnerFilter.getTownCode() != null && !partnerFilter.getTownCode().trim().isEmpty()) {
             return findAllByTown(partnerFilter.getLatitude(), partnerFilter.getLongitude(), partnerFilter.getTownCode(), pageable);
-        } else if (!partnerFilter.getCityCode().trim().isEmpty()) {
-            return findAllByCity(partnerFilter.getLatitude(), partnerFilter.getLongitude(), partnerFilter.getSectorCode(), pageable);
+        } else if (partnerFilter.getCityCode() != null && !partnerFilter.getCityCode().trim().isEmpty()) {
+            return findAllByCity(partnerFilter.getLatitude(), partnerFilter.getLongitude(), partnerFilter.getCityCode(), pageable);
         }
         return partnerService.findAllByDistance(partnerFilter.getLatitude(), partnerFilter.getLongitude(), pageable);
     }

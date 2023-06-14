@@ -7,6 +7,8 @@ public class PartnerFilter {
     private double latitude;
     private double longitude;
 
+    public PartnerFilter() {}
+
     public PartnerFilter(String sectorCode, String cityCode, String townCode, double latitude, double longitude) {
         this.sectorCode = sectorCode;
         this.cityCode = cityCode;
