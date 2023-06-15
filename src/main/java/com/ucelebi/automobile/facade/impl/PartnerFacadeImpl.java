@@ -121,7 +121,7 @@ public class PartnerFacadeImpl implements PartnerFacade {
     public void deleteByUid(String uid) {
         try {
             partnerService.deleteByUid(uid);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error while deleting partner.", e);
         }
     }
@@ -133,7 +133,7 @@ public class PartnerFacadeImpl implements PartnerFacade {
         Partner partner = partnerOptional.get();
         try {
             partnerService.delete(partner);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Error while deleting partner.", e);
         }
     }

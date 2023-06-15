@@ -10,6 +10,7 @@ import com.ucelebi.automobile.service.PartnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * User: ucelebi
@@ -505,4 +511,175 @@ class PartnerFacadeImplTest {
         assertThat(result).isEqualTo(partnerDTO);
     }
 
+    @Test
+    void itShouldDeletePartnerByUidSuccessfully() {
+        //Given
+        String partnerUid = "umitcelebi55";
+        //When
+        underTest.deleteByUid(partnerUid);
+        //Then
+        verify(partnerService, Mockito.times(1)).deleteByUid(partnerUid);
+        verifyNoMoreInteractions(partnerService);
+    }
+
+    @Test
+    void itShouldNotDeletePartnerByUidWhenThrowException() {
+        //Given
+        String partnerUid = "umitcelebi55";
+        doThrow(RuntimeException.class).when(partnerService).deleteByUid(partnerUid);
+        //When
+        underTest.deleteByUid(partnerUid);
+        //Then
+        verify(partnerService, Mockito.times(1)).deleteByUid(partnerUid);
+        verifyNoMoreInteractions(partnerService);
+    }
+
+    @Test
+    void itShouldDeletePartnerByPartnerDTOSuccessfully() {
+        //Given
+        String partnerUid = "celebiOtoMekanik";
+        Timestamp creationTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+        PartnerDTO partnerDTO = new PartnerDTO(creationTime,
+                modifiedTime,
+                true,
+                partnerUid,
+                "Oto Mekanik",
+                "Oto Mekanik",
+                "05446347799",
+                "/profile-photo/celebiOtoMekanik/fotograf342.png",
+                0.0,
+                42.345,
+                28.546,
+                null,
+                null,
+                Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
+                null,
+                null,
+                false,
+                Role.PARTNER);
+
+        Partner partner = new Partner.builder()
+                .creationTime(creationTime)
+                .modifiedTime(modifiedTime)
+                .active(true)
+                .uid(partnerUid)
+                .name("Celebi Oto Mekanik")
+                .displayName("Celebi Oto Mekanik")
+                .phoneNumber("05446347799")
+                .latitude(42.345)
+                .longitude(28.546)
+                .userRating(0.0)
+                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
+                .sundayOpen(false)
+                .role(Role.PARTNER)
+                .build();
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.ofNullable(partner));
+
+        //When
+        underTest.delete(partnerDTO);
+
+        //Then
+        verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
+        verify(partnerService,Mockito.times(1)).delete(partner);
+        verifyNoMoreInteractions(partnerService);
+    }
+
+    @Test
+    void itShouldNotDeletePartnerByPartnerDTODoesNotExist() {
+        //Given
+        String partnerUid = "celebiOtoMekanik";
+        Timestamp creationTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+        PartnerDTO partnerDTO = new PartnerDTO(creationTime,
+                modifiedTime,
+                true,
+                partnerUid,
+                "Oto Mekanik",
+                "Oto Mekanik",
+                "05446347799",
+                "/profile-photo/celebiOtoMekanik/fotograf342.png",
+                0.0,
+                42.345,
+                28.546,
+                null,
+                null,
+                Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
+                null,
+                null,
+                false,
+                Role.PARTNER);
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.empty());
+
+        //When
+        underTest.delete(partnerDTO);
+
+        //Then
+        verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
+        verify(partnerService,never()).delete(any());
+        verifyNoMoreInteractions(partnerService);
+    }
+
+    @Test
+    void itShouldNotDeletePartnerByPartnerDTOWhenThrowException() {
+        //Given
+        String partnerUid = "celebiOtoMekanik";
+        Timestamp creationTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+        PartnerDTO partnerDTO = new PartnerDTO(creationTime,
+                modifiedTime,
+                true,
+                partnerUid,
+                "Oto Mekanik",
+                "Oto Mekanik",
+                "05446347799",
+                "/profile-photo/celebiOtoMekanik/fotograf342.png",
+                0.0,
+                42.345,
+                28.546,
+                null,
+                null,
+                Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
+                null,
+                null,
+                false,
+                Role.PARTNER);
+
+        Partner partner = new Partner.builder()
+                .creationTime(creationTime)
+                .modifiedTime(modifiedTime)
+                .active(true)
+                .uid(partnerUid)
+                .name("Celebi Oto Mekanik")
+                .displayName("Celebi Oto Mekanik")
+                .phoneNumber("05446347799")
+                .latitude(42.345)
+                .longitude(28.546)
+                .userRating(0.0)
+                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
+                .sundayOpen(false)
+                .role(Role.PARTNER)
+                .build();
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.ofNullable(partner));
+        doThrow(RuntimeException.class).when(partnerService).delete(partner);
+
+        //When
+        underTest.delete(partnerDTO);
+
+        //Then
+        verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
+        verify(partnerService,Mockito.times(1)).delete(partner);
+    }
+
+    @Test
+    void itShouldAddProfilePhotoSuccessfully() {
+        //Given
+        //When
+        //Then
+    }
 }
