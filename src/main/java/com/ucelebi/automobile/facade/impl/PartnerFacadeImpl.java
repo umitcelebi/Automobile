@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -110,7 +111,7 @@ public class PartnerFacadeImpl implements PartnerFacade {
             assert isSaved;
             partner.setProfilePhoto(fileName);
             partnerService.update(partner);
-        } catch (Exception e) {
+        } catch (IOException | RuntimeException e) {
             log.error("Error while adding the profile photo");
             return false;
         }

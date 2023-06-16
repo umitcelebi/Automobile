@@ -9,6 +9,9 @@ import com.ucelebi.automobile.modelFilter.PartnerFilter;
 import com.ucelebi.automobile.service.PartnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -16,6 +19,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -23,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -405,6 +411,73 @@ class PartnerFacadeImplTest {
     }
 
     @Test
+    void itShouldSelectPartnerByUid() {
+        //Given
+        Timestamp creationTime = Timestamp.from(Instant.now());
+        Timestamp modifiedTime = Timestamp.from(Instant.now());
+
+        String partnerUid = "umitclebi";
+        Partner partner = new Partner.builder()
+                .creationTime(creationTime)
+                .modifiedTime(modifiedTime)
+                .active(true)
+                .uid(partnerUid)
+                .name("Celebi Oto Mekanik")
+                .displayName("Celebi Oto Mekanik")
+                .phoneNumber("05446347799")
+                .latitude(42.345)
+                .longitude(28.546)
+                .userRating(0.0)
+                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
+                .sundayOpen(false)
+                .role(Role.PARTNER)
+                .build();
+
+        PartnerDTO partnerDTO = new PartnerDTO(creationTime,
+                modifiedTime,
+                true,
+                partnerUid,
+                "Oto Mekanik",
+                "Oto Mekanik",
+                "05446347799",
+                "/profile-photo/celebiOtoMekanik/fotograf342.png",
+                0.0,
+                42.345,
+                28.546,
+                null,
+                null,
+                Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
+                null,
+                null,
+                false,
+                Role.PARTNER);
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.ofNullable(partner));
+        given(modelMapper.map(partner,PartnerDTO.class)).willReturn(partnerDTO);
+
+        //When
+        PartnerDTO result = underTest.findByUid(partnerUid);
+
+        //Then
+        assertEquals(partnerDTO,result);
+    }
+
+    @Test
+    void itShouldNotSelectPartnerByUid() {
+        //Given
+        String partnerUid = "umitclebi";
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.empty());
+
+        //When
+        PartnerDTO result = underTest.findByUid(partnerUid);
+
+        //Then
+        assertThat(result).isNull();
+        verify(modelMapper,never()).map(any(),any());
+    }
+
+    @Test
     void itShouldUpdatePartnerSuccessfully() {
         //Given
         Timestamp createdTime = Timestamp.from(Instant.now());
@@ -679,7 +752,85 @@ class PartnerFacadeImplTest {
     @Test
     void itShouldAddProfilePhotoSuccessfully() {
         //Given
+        String partnerUid = "umitclebi";
+        MultipartFile multipartFile = new MockMultipartFile("fotograf.png","fotograf.png","image/png",new byte[60]);
+        Partner partner = new Partner.builder()
+                .creationTime(Timestamp.from(Instant.now()))
+                .modifiedTime(Timestamp.from(Instant.now()))
+                .active(true)
+                .uid(partnerUid)
+                .name("Celebi Oto Mekanik")
+                .displayName("Celebi Oto Mekanik")
+                .phoneNumber("05446347799")
+                .latitude(42.345)
+                .longitude(28.546)
+                .userRating(0.0)
+                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
+                .sundayOpen(false)
+                .role(Role.PARTNER)
+                .build();
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.ofNullable(partner));
+
         //When
+        boolean result = underTest.addProfilePhoto(partnerUid, multipartFile);
+
+        //Then
+        assertThat(result).isTrue();
+        verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
+        verify(partnerService,Mockito.times(1)).update(partner);
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("checkMultipartNullOrEmpty")
+    void itShouldNotAddProfilePhotoWhenMultipartFileNullOrEmpty(String partnerUid, MultipartFile photo, boolean expected) {
+
+        //When
+        boolean result = underTest.addProfilePhoto(partnerUid, photo);
+        //Then
+        assertEquals(expected,result);
+    }
+
+    static Stream<Arguments> checkMultipartNullOrEmpty() {
+        return Stream.of(
+                Arguments.of("umitclebi",null,false),
+                Arguments.of("eminyilmaz",new MockMultipartFile("photo2.png","photo2.png","image/png",new byte[0]),false)
+        );
+    }
+
+
+
+    @Test
+    void itShouldNotAddProfilePhotoWhenPartnerDoesNotExist() {
+        //Given
+        String partnerUid = "umitclebi";
+        MultipartFile multipartFile = new MockMultipartFile("fotograf.png","fotograf.png","image/png",new byte[60]);
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.empty());
+
+        //When
+        boolean result = underTest.addProfilePhoto(partnerUid, multipartFile);
+
+        //Then
+        assertThat(result).isFalse();
+        verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
+        verify(partnerService,never()).update(any());
+    }
+
+    @Test
+    void itShouldNotAddProfilePhotoWhenThrowException() {
+        //Given
+        String partnerUid = "umitclebi";
+        MultipartFile multipartFile = new MockMultipartFile("fotograf.png","fotograf.png","image/png",new byte[60]);
+
+        given(partnerService.findByUid(partnerUid)).willReturn(Optional.of(new Partner()));
+
+        doThrow(RuntimeException.class).when(partnerService).update(any());
+
+        //When
+        underTest.addProfilePhoto(partnerUid,multipartFile);
         //Then
     }
 }
