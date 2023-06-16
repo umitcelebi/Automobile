@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -27,6 +29,14 @@ public class Town extends Item{
         this.code = code;
         this.name = name;
         this.city = city;
+    }
+
+    public Town(Long id, Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name, City city, List<Address> addresses) {
+        super(id, creationTime, modifiedTime, active);
+        this.code = code;
+        this.name = name;
+        this.city = city;
+        this.addresses = addresses;
     }
 
     public String getCode() {
