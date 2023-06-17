@@ -2,8 +2,11 @@ package com.ucelebi.automobile.facade.impl;
 
 import com.ucelebi.automobile.dto.TownDTO;
 import com.ucelebi.automobile.facade.TownFacade;
+import com.ucelebi.automobile.model.City;
 import com.ucelebi.automobile.model.Town;
+import com.ucelebi.automobile.service.CityService;
 import com.ucelebi.automobile.service.TownService;
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,12 +19,15 @@ import java.util.Optional;
 
 @Component
 public class TownFacadeImpl implements TownFacade {
+    public static Logger log = Logger.getLogger(TownFacadeImpl.class);
     private final TownService townService;
+    private final CityService cityService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public TownFacadeImpl(TownService townService, ModelMapper modelMapper) {
+    public TownFacadeImpl(TownService townService, CityService cityService, ModelMapper modelMapper) {
         this.townService = townService;
+        this.cityService = cityService;
         this.modelMapper = modelMapper;
     }
 
@@ -61,11 +67,32 @@ public class TownFacadeImpl implements TownFacade {
 
     @Override
     public TownDTO update(TownDTO entity) {
-        return null;
+        Optional<Town> optionalTown = townService.findByCode(entity.getCode());
+        if (optionalTown.isEmpty()) {
+            return null;
+        }
+        Town town = optionalTown.get();
+        town.setActive(entity.isActive());
+        town.setName(entity.getName());
+        if (entity.getCityCode() != null && !entity.getCityCode().isEmpty()) {
+            Optional<City> cityByCode = cityService.findCityByCode(entity.getCityCode());
+            town.setCity(cityByCode.orElse(null));
+        }
+        Town updatedTown = townService.update(town);
+        return modelMapper.map(updatedTown, TownDTO.class);
     }
 
     @Override
     public void delete(TownDTO entity) {
-
+        Optional<Town> optionalTown = townService.findByCode(entity.getCode());
+        if (optionalTown.isEmpty()) {
+            return;
+        }
+        Town town = optionalTown.get();
+        try {
+            townService.deleteById(town.getId());
+        }catch (RuntimeException e) {
+            log.error("Error while deleting town.", e);
+        }
     }
 }
