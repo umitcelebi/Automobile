@@ -9,6 +9,16 @@ public class SectorDTO {
     private String code;
     private String name;
 
+    public SectorDTO() {}
+
+    public SectorDTO(Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name) {
+        this.creationTime = creationTime;
+        this.modifiedTime = modifiedTime;
+        this.active = active;
+        this.code = code;
+        this.name = name;
+    }
+
     public Timestamp getCreationTime() {
         return creationTime;
     }

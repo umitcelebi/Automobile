@@ -5,6 +5,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,13 @@ public class Sector extends Item {
     public Sector(String code, String name) {
         this.code = code;
         this.name = name;
+    }
+
+    public Sector(Long id, Timestamp creationTime, Timestamp modifiedTime, boolean active, String code, String name, List<Partner> partners) {
+        super(id, creationTime, modifiedTime, active);
+        this.code = code;
+        this.name = name;
+        this.partners = partners;
     }
 
     public String getCode() {
