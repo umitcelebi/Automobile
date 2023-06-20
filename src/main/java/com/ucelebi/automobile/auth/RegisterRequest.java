@@ -8,6 +8,7 @@ import java.util.List;
 
 public class RegisterRequest {
     private String name;
+    private String displayName;
     private String username;
     private String password;
     private Role role;
@@ -23,22 +24,21 @@ public class RegisterRequest {
     public RegisterRequest() {}
 
     public RegisterRequest(String name,
-                           String username,
+                           String displayName, String username,
                            String password,
                            Role role,
                            String phoneNumber,
-                           MultipartFile profilePhoto,
                            String mail,
                            UserType userType,
                            Double latitude,
                            Double longitude,
                            boolean sundayOpen, List<String> sectors) {
         this.name = name;
+        this.displayName = displayName;
         this.username = username;
         this.password = password;
         this.role = role;
         this.phoneNumber = phoneNumber;
-        this.profilePhoto = profilePhoto;
         this.mail = mail;
         this.userType = userType;
         this.latitude = latitude;
@@ -52,6 +52,12 @@ public class RegisterRequest {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public String getDisplayName() {
+        return displayName;
+    }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
     public String getUsername() {
         return username;

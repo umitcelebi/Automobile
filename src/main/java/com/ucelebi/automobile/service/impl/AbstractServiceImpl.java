@@ -3,6 +3,7 @@ package com.ucelebi.automobile.service.impl;
 import com.ucelebi.automobile.dao.AbstractItemDao;
 import com.ucelebi.automobile.model.Item;
 import com.ucelebi.automobile.service.AbstractService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import java.util.Optional;
 
 @Service
 public class AbstractServiceImpl<T extends Item, ID extends Serializable> implements AbstractService<T, ID> {
+
+    public static Logger log = Logger.getLogger(AbstractServiceImpl.class);
 
     @Qualifier("abstractDao")
     private final AbstractItemDao<T, ID> abstractDao;
@@ -61,11 +64,21 @@ public class AbstractServiceImpl<T extends Item, ID extends Serializable> implem
 
     @Transactional
     @Override
+    public void deleteAll() {
+        try {
+            abstractDao.deleteAll();
+        } catch (Exception e) {
+            log.error("Error while deleting all entities.",e);
+        }
+    }
+
+    @Transactional
+    @Override
     public void delete(T entity) {
         try {
             abstractDao.delete(entity);
         }catch (Exception e) {
-
+            log.error("Error while deleting entity. {}",e);
         }
     }
 
@@ -75,7 +88,7 @@ public class AbstractServiceImpl<T extends Item, ID extends Serializable> implem
         try {
             abstractDao.deleteById(entityId);
         } catch (Exception e) {
-
+            log.error("Error while deleting entity by id. {}",e);
         }
     }
 }
