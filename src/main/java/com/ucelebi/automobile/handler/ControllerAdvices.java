@@ -2,6 +2,7 @@ package com.ucelebi.automobile.handler;
 
 import com.ucelebi.automobile.exception.AlreadyExistException;
 import org.apache.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,6 +41,11 @@ public class ControllerAdvices {
         List<FieldError> fieldErrors = result.getFieldErrors();
         List<String> errorList = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
         return new ResponseEntity<>(errorList, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { DataIntegrityViolationException.class })
+    public ResponseEntity<String> dataIntegrityViolationException() {
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(value = { SQLIntegrityConstraintViolationException.class ,NullPointerException.class})
