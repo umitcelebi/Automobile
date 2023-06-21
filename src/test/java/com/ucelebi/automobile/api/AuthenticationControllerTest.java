@@ -2,6 +2,7 @@ package com.ucelebi.automobile.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ucelebi.automobile.auth.AuthenticationRequest;
 import com.ucelebi.automobile.auth.AuthenticationResponse;
 import com.ucelebi.automobile.auth.RegisterRequest;
 import com.ucelebi.automobile.enums.Role;
@@ -102,6 +103,65 @@ class AuthenticationControllerTest {
         AuthenticationResponse actualResponse = (AuthenticationResponse) jsonToObject(registerResult.getResponse().getContentAsString(), AuthenticationResponse.class);
 
         assertNull(actualResponse);
+    }
+
+    @Test
+    void itShouldAuthenticateSuccessfully() throws Exception {
+        //Given
+        String username = "umitclebi";
+        String password = "password1234";
+        Role role = Role.CUSTOMER;
+        RegisterRequest registerRequest = new RegisterRequest("Ümit Çelebi",
+                "Ümit Çelebi",
+                username,
+                password,
+                role,
+                "05347773344",
+                "umitclebi@gmail.com",
+                UserType.BIREYSEL,
+                42.456,
+                28.453,
+                false,
+                null);
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(objectToJson(registerRequest))))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(username, password);
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(null, username, role);
+
+        //When
+        MvcResult result = mockMvc.perform(post("/api/v1/auth/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(objectToJson(authenticationRequest))))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //Then
+        AuthenticationResponse response = (AuthenticationResponse) jsonToObject(result.getResponse().getContentAsString(), AuthenticationResponse.class);
+        assertThat(response).usingRecursiveComparison()
+                .ignoringFields("token")
+                .isEqualTo(authenticationResponse);
+        assertThat(response.getToken()).isNotNull();
+    }
+
+    @Test
+    void itShouldNotAuthenticateWhenUsernameOrPasswordWrong() throws Exception {
+        //Given
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest("umitclebi", "password");
+
+        //When
+        MvcResult result = mockMvc.perform(post("/api/v1/auth/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(objectToJson(authenticationRequest))))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+
+        //Then
+        assertThat(result.getResponse().getContentAsString()).isEqualTo("Bad credentials");
     }
 
     private Object jsonToObject(String json, Class<?> type) {
