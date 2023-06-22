@@ -57,6 +57,7 @@ public class AuthenticationService {
                     .name(request.getName())
                     .displayName(request.getName())
                     .password(passwordEncoder.encode(request.getPassword()))
+                    .phoneNumber(request.getPhoneNumber())
                     .role(request.getRole())
                     .latitude(request.getLatitude())
                     .longitude(request.getLongitude())

@@ -1,12 +1,11 @@
 package com.ucelebi.automobile.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ucelebi.automobile.auth.AuthenticationRequest;
 import com.ucelebi.automobile.auth.AuthenticationResponse;
 import com.ucelebi.automobile.auth.RegisterRequest;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
+import com.ucelebi.automobile.utils.JsonMapperUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -63,11 +61,11 @@ class AuthenticationControllerTest {
 
         MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectToJson(request))))
+                .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(request))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        AuthenticationResponse actualResponse = (AuthenticationResponse) jsonToObject(registerResult.getResponse().getContentAsString(), AuthenticationResponse.class);
+        AuthenticationResponse actualResponse = (AuthenticationResponse) JsonMapperUtil.jsonToObject(registerResult.getResponse().getContentAsString(), AuthenticationResponse.class);
 
         assertThat(actualResponse)
                 .usingRecursiveComparison()
@@ -96,11 +94,11 @@ class AuthenticationControllerTest {
 
         MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectToJson(request))))
+                        .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(request))))
                 .andExpect(status().isNotAcceptable())
                 .andReturn();
 
-        AuthenticationResponse actualResponse = (AuthenticationResponse) jsonToObject(registerResult.getResponse().getContentAsString(), AuthenticationResponse.class);
+        AuthenticationResponse actualResponse = (AuthenticationResponse) JsonMapperUtil.jsonToObject(registerResult.getResponse().getContentAsString(), AuthenticationResponse.class);
 
         assertNull(actualResponse);
     }
@@ -126,7 +124,7 @@ class AuthenticationControllerTest {
 
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectToJson(registerRequest))))
+                        .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(registerRequest))))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -136,12 +134,12 @@ class AuthenticationControllerTest {
         //When
         MvcResult result = mockMvc.perform(post("/api/v1/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectToJson(authenticationRequest))))
+                        .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(authenticationRequest))))
                 .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        AuthenticationResponse response = (AuthenticationResponse) jsonToObject(result.getResponse().getContentAsString(), AuthenticationResponse.class);
+        AuthenticationResponse response = (AuthenticationResponse) JsonMapperUtil.jsonToObject(result.getResponse().getContentAsString(), AuthenticationResponse.class);
         assertThat(response).usingRecursiveComparison()
                 .ignoringFields("token")
                 .isEqualTo(authenticationResponse);
@@ -156,32 +154,11 @@ class AuthenticationControllerTest {
         //When
         MvcResult result = mockMvc.perform(post("/api/v1/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectToJson(authenticationRequest))))
+                        .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(authenticationRequest))))
                 .andExpect(status().isUnauthorized())
                 .andReturn();
 
         //Then
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Bad credentials");
-    }
-
-    private Object jsonToObject(String json, Class<?> type) {
-        if (json == null || json.isEmpty()) {
-            return null;
-        }
-        try {
-            return new ObjectMapper().readValue(json, type);
-        } catch (JsonProcessingException e) {
-            fail("Failed to convert json to object");
-            return null;
-        }
-    }
-
-    private String objectToJson(Object object) {
-        try {
-            return new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            fail("Failed to convert object to json");
-            return null;
-        }
     }
 }

@@ -60,7 +60,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     @Override
     public CustomerDTO update(CustomerDTO entity) {
         Optional<Customer> customerOptional = customerService.findByUid(entity.getUid());
-        if (customerOptional.isEmpty()) return entity;
+        if (customerOptional.isEmpty()) return null;
         Customer customer = customerOptional.get();
         customer.setName(entity.getName());
         customer.setDisplayName(entity.getDisplayName());
