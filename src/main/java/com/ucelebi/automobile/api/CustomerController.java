@@ -36,7 +36,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerDTO> update(@RequestBody CustomerDTO customerDTO) {
-        CustomerDTO savedCustomer = customerFacade.save(customerDTO);
+        CustomerDTO savedCustomer = customerFacade.update(customerDTO);
         return ResponseEntity.ok().body(savedCustomer);
     }
 
