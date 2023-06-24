@@ -1,6 +1,7 @@
 package com.ucelebi.automobile.api;
 
 import com.ucelebi.automobile.auth.RegisterRequest;
+import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
@@ -8,6 +9,7 @@ import com.ucelebi.automobile.utils.JsonMapperUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +43,15 @@ class PartnerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private RegisterRequest registerRequestOne;
     private RegisterRequest registerRequestTwo;
+    private RegisterRequest registerRequestThree;
 
     @BeforeAll
     void setUp() throws Exception {
         // Given
-        RegisterRequest registerRequestOne = new RegisterRequest("Yılmaz Oto Egzoz",
-                "Yılmam Egzoz",
+        registerRequestOne = new RegisterRequest("Yilmaz Oto Egzoz",
+                "Yilmam Egzoz",
                 "yilmazOtoEgzoz",
                 "password12345",
                 Role.PARTNER,
@@ -71,8 +75,8 @@ class PartnerControllerTest {
                 false,
                 null);
 
-        RegisterRequest registerRequestThree = new RegisterRequest("Güven Oto servis",
-                "Güven OTO servis",
+        registerRequestThree = new RegisterRequest("Guven Oto servis",
+                "Guven OTO servis",
                 "guvenOto",
                 "password.1234",
                 Role.PARTNER,
@@ -117,6 +121,7 @@ class PartnerControllerTest {
     }
 
     @Test
+    @DisplayName("It should list from the closest partner to the longest partner by location.")
     void itShouldSelectPartnerWithLocation() throws Exception{
         //When
         MvcResult result = mockMvc.perform(get("/api/v1/partners?latitude=42.456&longitude=28.452")
@@ -136,5 +141,50 @@ class PartnerControllerTest {
                 .usingRecursiveComparison()
                 .comparingOnlyFields("latitude","displayName","longitude")
                 .isEqualTo(registerRequestTwo);
+
+        assertThat(JsonMapperUtil.jsonToObject(content.get(1).toString(),PartnerListDTO.class))
+                .usingRecursiveComparison()
+                .comparingOnlyFields("latitude","displayName","longitude")
+                .isEqualTo(registerRequestThree);
+    }
+
+    @Test
+    @DisplayName("It should list from the closest partner to the longest partner by location with page number and size.")
+    void itShouldSelectPartnerWithLocationAndPageSize() throws Exception{
+        //When
+        MvcResult result = mockMvc.perform(get("/api/v1/partners?latitude=42.456&longitude=28.452&page=1&size=1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        //Then
+        MockHttpServletResponse response = result.getResponse();
+        JSONObject jsonObject = new JSONObject(response.getContentAsString());
+        assertThat(jsonObject.get("totalPages")).isEqualTo(3);
+        assertThat(jsonObject.get("totalElements")).isEqualTo(3);
+        assertThat(jsonObject.get("number")).isEqualTo(1);
+        assertThat(jsonObject.get("size")).isEqualTo(1);
+        assertThat(jsonObject.get("content")).isNotNull();
+        JSONArray content = (JSONArray) jsonObject.get("content");
+        assertThat(JsonMapperUtil.jsonToObject(content.get(0).toString(),PartnerListDTO.class))
+                .usingRecursiveComparison()
+                .comparingOnlyFields("latitude","displayName","longitude")
+                .isEqualTo(registerRequestThree);
+    }
+
+    @Test
+    void itShouldSelectPartnerByUid() throws Exception {
+        //When
+        MvcResult result = mockMvc.perform(get("/api/v1/partners/details?username=yilmazOtoEgzoz")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        //Then
+        MockHttpServletResponse response = result.getResponse();
+        PartnerDTO customerResponse = (PartnerDTO) JsonMapperUtil.jsonToObject(response.getContentAsString(), PartnerDTO.class);
+        assertThat(customerResponse).isNotNull();
+        assertThat(customerResponse)
+                .usingRecursiveComparison()
+                .comparingOnlyFields("name","displayName","phoneNumber","mail","latitude","longitude")
+                .isEqualTo(registerRequestOne);
     }
 }

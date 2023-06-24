@@ -55,7 +55,7 @@ public class AuthenticationService {
             user = new Partner.builder()
                     .uid(request.getUsername())
                     .name(request.getName())
-                    .displayName(request.getName())
+                    .displayName(request.getDisplayName())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .phoneNumber(request.getPhoneNumber())
                     .role(request.getRole())
