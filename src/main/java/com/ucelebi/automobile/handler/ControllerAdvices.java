@@ -55,7 +55,7 @@ public class ControllerAdvices {
     }
     @ExceptionHandler(value = { IOException.class})
     public ResponseEntity<Object> ioException(IOException ex) {
-        log.error("Error IOException.");
+        log.error("Error IOException. {}", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

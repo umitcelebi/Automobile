@@ -2,10 +2,12 @@ package com.ucelebi.automobile.api;
 
 import com.ucelebi.automobile.auth.AuthenticationRequest;
 import com.ucelebi.automobile.auth.AuthenticationResponse;
-import com.ucelebi.automobile.auth.RegisterRequest;
+import com.ucelebi.automobile.auth.CustomerRegisterRequest;
+import com.ucelebi.automobile.dao.UserDao;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
 import com.ucelebi.automobile.utils.JsonMapperUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,13 @@ class AuthenticationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private UserDao userDao;
+
+    @BeforeEach
+    void setUp() {
+        userDao.deleteAll();
+    }
 
     @Test
     void itShouldRegisterSuccessfully() throws Exception {
@@ -44,18 +53,14 @@ class AuthenticationControllerTest {
         String username = "umitclebi3";
         String password = "password1234";
         Role role = Role.CUSTOMER;
-        RegisterRequest request = new RegisterRequest("Ümit Çelebi",
+        CustomerRegisterRequest request = new CustomerRegisterRequest("Ümit Çelebi",
                 "Ümit Çelebi",
                 username,
                 password,
                 role,
                 "05345556677",
                 "umitclebi@gmail.com",
-                UserType.BIREYSEL,
-                42.456,
-                28.453,
-                false,
-                null);
+                UserType.BIREYSEL);
 
         AuthenticationResponse expectedResponse = new AuthenticationResponse(null, username, role);
 
@@ -79,18 +84,14 @@ class AuthenticationControllerTest {
         //Given
         String username = "umitclebi3";
         Role role = Role.CUSTOMER;
-        RegisterRequest request = new RegisterRequest("Ümit Çelebi",
+        CustomerRegisterRequest request = new CustomerRegisterRequest("Ümit Çelebi",
                 "Ümit Çelebi",
                 username,
                 "password1234",
                 role,
                 null,
                 "umitclebi@gmail.com",
-                UserType.BIREYSEL,
-                42.456,
-                28.453,
-                false,
-                null);
+                UserType.BIREYSEL);
 
         MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,18 +110,14 @@ class AuthenticationControllerTest {
         String username = "umitclebi";
         String password = "password1234";
         Role role = Role.CUSTOMER;
-        RegisterRequest registerRequest = new RegisterRequest("Ümit Çelebi",
+        CustomerRegisterRequest registerRequest = new CustomerRegisterRequest("Ümit Çelebi",
                 "Ümit Çelebi",
                 username,
                 password,
                 role,
                 "05347773344",
                 "umitclebi@gmail.com",
-                UserType.BIREYSEL,
-                42.456,
-                28.453,
-                false,
-                null);
+                UserType.BIREYSEL);
 
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

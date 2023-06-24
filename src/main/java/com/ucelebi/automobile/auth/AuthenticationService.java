@@ -1,7 +1,7 @@
 package com.ucelebi.automobile.auth;
 
 import com.ucelebi.automobile.dao.UserDao;
-import com.ucelebi.automobile.enums.UserType;
+import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.exception.AlreadyExistException;
 import com.ucelebi.automobile.model.Customer;
 import com.ucelebi.automobile.model.Partner;
@@ -41,7 +41,8 @@ public class AuthenticationService {
         }
 
         User user = null;
-        if (request.getUserType().equals(UserType.BIREYSEL)) {
+
+        if (request.getRole().equals(Role.CUSTOMER)) {
             user = new Customer.builder()
                     .uid(request.getUsername())
                     .name(request.getName())
@@ -51,27 +52,31 @@ public class AuthenticationService {
                     .role(request.getRole())
                     .build();
 
-        } else if (request.getUserType().equals(UserType.KURUMSAL)) {
+        } else if (request.getRole().equals(Role.PARTNER)) {
+            PartnerRegisterRequest partnerRegisterRequest = (PartnerRegisterRequest) request;
             user = new Partner.builder()
-                    .uid(request.getUsername())
-                    .name(request.getName())
-                    .displayName(request.getName())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .phoneNumber(request.getPhoneNumber())
-                    .role(request.getRole())
-                    .latitude(request.getLatitude())
-                    .longitude(request.getLongitude())
-                    .sundayOpen(request.isSundayOpen())
+                    .uid(partnerRegisterRequest.getUsername())
+                    .name(partnerRegisterRequest.getName())
+                    .displayName(partnerRegisterRequest.getDisplayName())
+                    .password(passwordEncoder.encode(partnerRegisterRequest.getPassword()))
+                    .phoneNumber(partnerRegisterRequest.getPhoneNumber())
+                    .role(partnerRegisterRequest.getRole())
+                    .latitude(partnerRegisterRequest.getLatitude())
+                    .longitude(partnerRegisterRequest.getLongitude())
+                    .sundayOpen(partnerRegisterRequest.isSundayOpen())
                     .build();
 
-            if (request.getSectors() != null && !request.getSectors().isEmpty()) {
-                for (String sector: request.getSectors()) {
+            if (partnerRegisterRequest.getSectors() != null && !partnerRegisterRequest.getSectors().isEmpty()) {
+                for (String sector: partnerRegisterRequest.getSectors()) {
                     Optional<Sector> sectorOptional = sectorService.findByCode(sector);
                     if (sectorOptional.isEmpty()) continue;
                     ((Partner) user).getSectors().add(sectorOptional.get());
                 }
             }
+        }
 
+        if (user == null) {
+            throw new IllegalArgumentException("Kullanıcı bilgileri doldurulamadı.");
         }
 
         userDao.save(user);
