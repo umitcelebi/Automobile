@@ -77,7 +77,7 @@ class AuthenticationControllerTest {
     @DisplayName("It should not Register When username, password, name, displayName, phoneNumber are null")
     void itShouldNotRegisterWhenUserPropertyNull() throws Exception {
         //Given
-        String username = "umitclebi3";
+        String username = "umitclebi5";
         Role role = Role.CUSTOMER;
         RegisterRequest request = new RegisterRequest("Ümit Çelebi",
                 "Ümit Çelebi",
@@ -106,7 +106,7 @@ class AuthenticationControllerTest {
     @Test
     void itShouldAuthenticateSuccessfully() throws Exception {
         //Given
-        String username = "umitclebi";
+        String username = "umitclebi55";
         String password = "password1234";
         Role role = Role.CUSTOMER;
         RegisterRequest registerRequest = new RegisterRequest("Ümit Çelebi",

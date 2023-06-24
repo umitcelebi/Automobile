@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,7 +26,9 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -38,11 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PartnerControllerTest {
-
-
     @Autowired
     private MockMvc mockMvc;
-
     private RegisterRequest registerRequestOne;
     private RegisterRequest registerRequestTwo;
     private RegisterRequest registerRequestThree;
@@ -186,5 +186,21 @@ class PartnerControllerTest {
                 .usingRecursiveComparison()
                 .comparingOnlyFields("name","displayName","phoneNumber","mail","latitude","longitude")
                 .isEqualTo(registerRequestOne);
+    }
+
+    @Test
+    void itShouldAddProfilePhotoSuccessfully() throws Exception {
+        MockMultipartFile photo = new MockMultipartFile("photo","profilPhoto","image/png",new byte[4]);
+        mockMvc.perform(multipart("/api/v1/partners/add-pp?uid=yilmazOtoEgzoz").file(photo))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Success"));
+    }
+
+    @Test
+    void itShouldNotAddProfilePhoto() throws Exception {
+        MockMultipartFile photo = new MockMultipartFile("photo","profilPhoto","image/png",new byte[4]);
+        mockMvc.perform(multipart("/api/v1/partners/add-pp?uid=yilmazOtoE").file(photo))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Fail"));
     }
 }
