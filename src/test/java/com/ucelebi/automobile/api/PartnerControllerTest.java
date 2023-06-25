@@ -3,6 +3,7 @@ package com.ucelebi.automobile.api;
 import com.ucelebi.automobile.auth.PartnerRegisterRequest;
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
+import com.ucelebi.automobile.dto.PartnerUpdateDTO;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
 import com.ucelebi.automobile.utils.JsonMapperUtil;
@@ -22,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -204,10 +206,72 @@ class PartnerControllerTest {
     }
 
     @Test
-    void itShouldNotAddProfilePhoto() throws Exception {
+    void itShouldNotAddProfilePhotoWhenUserNotFound() throws Exception {
         MockMultipartFile photo = new MockMultipartFile("photo","profilPhoto","image/png",new byte[4]);
         mockMvc.perform(multipart("/api/v1/partners/add-pp?uid=yilmazOtoE").file(photo))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Fail"));
+    }
+
+    @Test
+    void itShouldUpdatePartnerSuccessfully() throws Exception {
+        PartnerUpdateDTO partnerDTO = new PartnerUpdateDTO(false,
+                "motor.kardesler",
+                "Kardesler Motor Mekanik",
+                "Kardesler Mekanik",
+                "05556667788",
+                "/profile-photo/motor.kardesler.png",
+                42.567,
+                28.390,
+                null,
+                Arrays.asList("Haftaici 10:00 - 20:00", "Haftasonu 10:00 - 18:00"),
+                null,
+                null,
+                false,
+                Role.ADMIN);
+        MvcResult result = mockMvc.perform(post("/api/v1/partners/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(partnerDTO))))
+                .andExpect(status().isOk())
+                .andReturn();
+        PartnerDTO response = (PartnerDTO) JsonMapperUtil.jsonToObject(result.getResponse().getContentAsString(),PartnerDTO.class);
+
+        assertThat(response).usingRecursiveComparison()
+                .comparingOnlyFields("active",
+                        "uid",
+                        "name",
+                        "displayName",
+                        "phoneNumber",
+                        "latitude",
+                        "longitude",
+                        "openingTimes",
+                        "sundayOpen")
+                .isEqualTo(partnerDTO);
+    }
+
+    @Test
+    void itShouldNotUpdatePartnerWhenUidDoesNotExist() throws Exception {
+        PartnerUpdateDTO partnerDTO = new PartnerUpdateDTO(false,
+                "motor.kardesler12",
+                "Kardesler Motor Mekanik",
+                "Kardesler Mekanik",
+                "05556667788",
+                "/profile-photo/motor.kardesler.png",
+                42.567,
+                28.390,
+                null,
+                Arrays.asList("Haftaici 10:00 - 20:00", "Haftasonu 10:00 - 18:00"),
+                null,
+                null,
+                false,
+                Role.ADMIN);
+        MvcResult result = mockMvc.perform(post("/api/v1/partners/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(partnerDTO))))
+                .andExpect(status().isOk())
+                .andReturn();
+        PartnerDTO response = (PartnerDTO) JsonMapperUtil.jsonToObject(result.getResponse().getContentAsString(),PartnerDTO.class);
+
+        assertThat(response).isNull();
     }
 }

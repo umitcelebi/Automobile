@@ -1,5 +1,6 @@
 package com.ucelebi.automobile.facade;
 
+import com.ucelebi.automobile.dto.PartnerUpdateDTO;
 import com.ucelebi.automobile.modelFilter.PartnerFilter;
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
@@ -13,7 +14,7 @@ public interface PartnerFacade {
     PartnerDTO save(PartnerDTO entity);
     List<PartnerListDTO> findAll();
     Page<PartnerListDTO> findAll(Pageable pageable, PartnerFilter partnerFilter);
-    PartnerDTO update(PartnerDTO entity);
+    PartnerDTO update(PartnerUpdateDTO entity);
     Page<PartnerListDTO> findAllBySectors(double latitude, double longitude, String sectorCode, Pageable pageable);
     Page<PartnerListDTO> findAllByCity(double latitude, double longitude, String cityCode, Pageable pageable);
     Page<PartnerListDTO> findAllByTown(double latitude, double longitude, String townCode, Pageable pageable);

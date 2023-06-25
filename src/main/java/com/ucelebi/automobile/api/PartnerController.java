@@ -1,5 +1,6 @@
 package com.ucelebi.automobile.api;
 
+import com.ucelebi.automobile.dto.PartnerUpdateDTO;
 import com.ucelebi.automobile.modelFilter.PartnerFilter;
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
@@ -42,7 +43,7 @@ public class PartnerController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<PartnerDTO> update(@RequestBody PartnerDTO partnerDTO) {
+    public ResponseEntity<PartnerDTO> update(@RequestBody PartnerUpdateDTO partnerDTO) {
         PartnerDTO savedPartner = partnerFacade.update(partnerDTO);
         return ResponseEntity.ok().body(savedPartner);
     }

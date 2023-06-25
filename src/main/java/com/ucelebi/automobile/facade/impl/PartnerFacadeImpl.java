@@ -2,6 +2,7 @@ package com.ucelebi.automobile.facade.impl;
 
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
+import com.ucelebi.automobile.dto.PartnerUpdateDTO;
 import com.ucelebi.automobile.facade.PartnerFacade;
 import com.ucelebi.automobile.model.Partner;
 import com.ucelebi.automobile.modelFilter.PartnerFilter;
@@ -58,16 +59,20 @@ public class PartnerFacadeImpl implements PartnerFacade {
     }
 
     @Override
-    public PartnerDTO update(PartnerDTO entity) {
+    public PartnerDTO update(PartnerUpdateDTO entity) {
         Optional<Partner> partnerOptional = partnerService.findByUid(entity.getUid());
-        if (partnerOptional.isEmpty()) return entity;
+        if (partnerOptional.isEmpty()) return null;
         Partner partner = partnerOptional.get();
         partner.setActive(entity.isActive());
-        partner.setSundayOpen(entity.isSundayOpen());
-        partner.setLatitude(entity.getLatitude());
+        partner.setName(entity.getName());
+        partner.setDisplayName(entity.getDisplayName());
+        partner.setPhoneNumber(entity.getPhoneNumber());
+        partner.setProfilePhoto(entity.getProfilePhoto());
+        partner.setLongitude(entity.getLongitude());
         partner.setLatitude(entity.getLatitude());
         partner.setOpeningTimes(entity.getOpeningTimes());
-        partner.setUserRating(entity.getUserRating());
+        partner.setSundayOpen(entity.isSundayOpen());
+
         Partner updatedService = partnerService.update(partner);
         return modelMapper.map(updatedService, PartnerDTO.class);
     }

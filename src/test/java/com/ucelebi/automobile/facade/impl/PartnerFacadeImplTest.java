@@ -2,6 +2,7 @@ package com.ucelebi.automobile.facade.impl;
 
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
+import com.ucelebi.automobile.dto.PartnerUpdateDTO;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.facade.PartnerFacade;
 import com.ucelebi.automobile.model.Partner;
@@ -483,18 +484,14 @@ class PartnerFacadeImplTest {
         Timestamp createdTime = Timestamp.from(Instant.now());
         Timestamp modifiedTime = Timestamp.from(Instant.now());
 
-        PartnerDTO partnerDTO = new PartnerDTO(createdTime,
-                modifiedTime,
-                true,
+        PartnerUpdateDTO partnerDTO = new PartnerUpdateDTO(true,
                 "celebiOtoMekanik",
                 "Oto Mekanik",
                 "Oto Mekanik",
                 "05446347799",
                 "/profile-photo/celebiOtoMekanik/fotograf342.png",
-                0.0,
                 42.345,
                 28.546,
-                null,
                 null,
                 Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
                 null,
@@ -546,28 +543,30 @@ class PartnerFacadeImplTest {
         //Then
         assertThat(result)
                 .usingRecursiveComparison()
-                .ignoringFields("modifiedTime")
+                .comparingOnlyFields("active",
+                        "uid",
+                        "name",
+                        "displayName",
+                        "phoneNumber",
+                        "latitude",
+                        "longitude",
+                        "openingTimes",
+                        "sundayOpen",
+                        "role")
                 .isEqualTo(partnerDTO);
     }
 
     @Test
     void itShouldNotUpdatePartnerWhenPartnerDoesNotExist() {
         //Given
-        Timestamp createdTime = Timestamp.from(Instant.now());
-        Timestamp modifiedTime = Timestamp.from(Instant.now());
-
-        PartnerDTO partnerDTO = new PartnerDTO(createdTime,
-                modifiedTime,
-                true,
+        PartnerUpdateDTO partnerDTO = new PartnerUpdateDTO(true,
                 "celebiOtoMekanik",
                 "Oto Mekanik",
                 "Oto Mekanik",
                 "05446347799",
                 "/profile-photo/celebiOtoMekanik/fotograf342.png",
-                0.0,
                 42.345,
                 28.546,
-                null,
                 null,
                 Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
                 null,
@@ -581,7 +580,7 @@ class PartnerFacadeImplTest {
         PartnerDTO result = underTest.update(partnerDTO);
 
         //Then
-        assertThat(result).isEqualTo(partnerDTO);
+        assertThat(result).isNull();
     }
 
     @Test
