@@ -1,5 +1,6 @@
 package com.ucelebi.automobile.api;
 
+import com.ucelebi.automobile.auth.CustomerRegisterRequest;
 import com.ucelebi.automobile.auth.RegisterRequest;
 import com.ucelebi.automobile.dto.CustomerDTO;
 import com.ucelebi.automobile.enums.Role;
@@ -41,34 +42,26 @@ class CustomerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private RegisterRequest registerRequestTwo;
+    private CustomerRegisterRequest registerRequestTwo;
     @BeforeAll
     void setUp() throws Exception {
         // Given
-        RegisterRequest registerRequestOne = new RegisterRequest("Umit Celebi",
+        CustomerRegisterRequest registerRequestOne = new CustomerRegisterRequest("Umit Celebi",
                 "Umit Celebi",
                 "umitclebi",
                 "password1234",
                 Role.CUSTOMER,
                 "05345556677",
                 "umitclebi@gmail.com",
-                UserType.BIREYSEL,
-                null,
-                null,
-                false,
-                null);
-        registerRequestTwo = new RegisterRequest("Emin Yilmaz",
+                UserType.BIREYSEL);
+        registerRequestTwo = new CustomerRegisterRequest("Emin Yilmaz",
                 "Emin Yilmaz",
                 "emin.yilmaz",
                 "password.12",
                 Role.CUSTOMER,
                 "05334446677",
                 "emin.yilmaz@gmail.com",
-                UserType.BIREYSEL,
-                42.456,
-                28.453,
-                false,
-                null);
+                UserType.BIREYSEL);
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(JsonMapperUtil.objectToJson(registerRequestOne))))
