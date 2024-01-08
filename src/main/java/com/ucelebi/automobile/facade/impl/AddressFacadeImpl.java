@@ -43,7 +43,7 @@ public class AddressFacadeImpl implements AddressFacade {
     }
 
     @Override
-    public AddressDTO save(AddressDTO entity) {
+    public Address save(AddressDTO entity) {
         Address address = modelMapper.map(entity, Address.class);
         address.setCode(String.valueOf(System.currentTimeMillis()));
 
@@ -55,8 +55,7 @@ public class AddressFacadeImpl implements AddressFacade {
         address.setCountry(countryByCode.orElse(null));
         address.setTown(townByCode.orElse(null));
 
-        Address savedAddress = addressService.save(address);
-        return modelMapper.map(savedAddress, AddressDTO.class);
+        return addressService.save(address);
     }
 
     @Override

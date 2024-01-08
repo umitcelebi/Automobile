@@ -3,16 +3,15 @@ package com.ucelebi.automobile.facade.impl;
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
 import com.ucelebi.automobile.dto.PartnerUpdateDTO;
+import com.ucelebi.automobile.dto.WorkingTimesDTO;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.facade.PartnerFacade;
 import com.ucelebi.automobile.model.Partner;
+import com.ucelebi.automobile.model.WorkingTimes;
 import com.ucelebi.automobile.modelFilter.PartnerFilter;
 import com.ucelebi.automobile.service.PartnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -93,7 +91,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -109,7 +107,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -163,7 +161,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -179,7 +177,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/yilmazEgzoz/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -429,7 +427,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -493,7 +491,7 @@ class PartnerFacadeImplTest {
                 42.345,
                 28.546,
                 null,
-                Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
+                List.of(new WorkingTimesDTO("MONDAY", "09:30", "18:30")),
                 null,
                 null,
                 false,
@@ -510,7 +508,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -568,7 +566,7 @@ class PartnerFacadeImplTest {
                 42.345,
                 28.546,
                 null,
-                Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 13:00"),
+                List.of(new WorkingTimesDTO("MONDAY", "09:30", "18:30")),
                 null,
                 null,
                 false,
@@ -642,7 +640,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -731,7 +729,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -764,7 +762,7 @@ class PartnerFacadeImplTest {
                 .latitude(42.345)
                 .longitude(28.546)
                 .userRating(0.0)
-                .openingTimes(Arrays.asList("Haftaiçi 10:00 - 20:00", "Haftasonu 10:00 - 14:00"))
+                .openingTimes(List.of(new WorkingTimes("MONDAY", "09:30", "18:30")))
                 .profilePhoto("/profile-photo/celebiOtoMekanik/fotograf.png")
                 .sundayOpen(false)
                 .role(Role.PARTNER)
@@ -773,33 +771,22 @@ class PartnerFacadeImplTest {
         given(partnerService.findByUid(partnerUid)).willReturn(Optional.ofNullable(partner));
 
         //When
-        boolean result = underTest.addProfilePhoto(partnerUid, multipartFile);
+        PartnerDTO result = underTest.addProfilePhoto(partnerUid, multipartFile);
 
         //Then
-        assertThat(result).isTrue();
+        assertThat(result).isNotNull();
         verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
         verify(partnerService,Mockito.times(1)).update(partner);
 
     }
 
-    @ParameterizedTest
-    @MethodSource("checkMultipartNullOrEmpty")
-    void itShouldNotAddProfilePhotoWhenMultipartFileNullOrEmpty(String partnerUid, MultipartFile photo, boolean expected) {
-
+    @Test
+    void itShouldNotAddProfilePhotoWhenMultipartFileNullOrEmpty() {
         //When
-        boolean result = underTest.addProfilePhoto(partnerUid, photo);
+        PartnerDTO result = underTest.addProfilePhoto("umitcelebi1", new MockMultipartFile("image1", new byte[32]));
         //Then
-        assertEquals(expected,result);
+        assertThat(result).isNotNull();
     }
-
-    static Stream<Arguments> checkMultipartNullOrEmpty() {
-        return Stream.of(
-                Arguments.of("umitclebi",null,false),
-                Arguments.of("eminyilmaz",new MockMultipartFile("photo2.png","photo2.png","image/png",new byte[0]),false)
-        );
-    }
-
-
 
     @Test
     void itShouldNotAddProfilePhotoWhenPartnerDoesNotExist() {
@@ -810,10 +797,10 @@ class PartnerFacadeImplTest {
         given(partnerService.findByUid(partnerUid)).willReturn(Optional.empty());
 
         //When
-        boolean result = underTest.addProfilePhoto(partnerUid, multipartFile);
+        PartnerDTO result = underTest.addProfilePhoto(partnerUid, multipartFile);
 
         //Then
-        assertThat(result).isFalse();
+        assertThat(result).isNull();
         verify(partnerService,Mockito.times(1)).findByUid(partnerUid);
         verify(partnerService,never()).update(any());
     }

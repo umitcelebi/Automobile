@@ -19,7 +19,7 @@ public interface PartnerFacade {
     Page<PartnerListDTO> findAllByCity(double latitude, double longitude, String cityCode, Pageable pageable);
     Page<PartnerListDTO> findAllByTown(double latitude, double longitude, String townCode, Pageable pageable);
     PartnerDTO findByUid(String uid);
-    boolean addProfilePhoto(String uid, MultipartFile multipartFile);
+    PartnerDTO addProfilePhoto(String uid, MultipartFile multipartFile);
     void deleteByUid(String uid);
     void delete(PartnerDTO entity);
 }

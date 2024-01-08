@@ -70,7 +70,7 @@ public class PartnerFacadeImpl implements PartnerFacade {
         partner.setProfilePhoto(entity.getProfilePhoto());
         partner.setLongitude(entity.getLongitude());
         partner.setLatitude(entity.getLatitude());
-        partner.setOpeningTimes(entity.getOpeningTimes());
+        // TODO partner.setWorkingTimes(entity.getOpeningTimes());
         partner.setSundayOpen(entity.isSundayOpen());
 
         Partner updatedService = partnerService.update(partner);
@@ -101,12 +101,12 @@ public class PartnerFacadeImpl implements PartnerFacade {
     }
 
     @Override
-    public boolean addProfilePhoto(String uid, MultipartFile multipartFile) {
-        if (multipartFile == null || multipartFile.isEmpty()) return false;
+    public PartnerDTO addProfilePhoto(String uid, MultipartFile multipartFile) {
+        if (multipartFile == null || multipartFile.isEmpty()) return null;
 
         Optional<Partner> partnerOptional = partnerService.findByUid(uid);
 
-        if (partnerOptional.isEmpty()) return false;
+        if (partnerOptional.isEmpty()) return null;
 
         Partner partner = partnerOptional.get();
         try {
@@ -118,9 +118,9 @@ public class PartnerFacadeImpl implements PartnerFacade {
             partnerService.update(partner);
         } catch (IOException | RuntimeException e) {
             log.error("Error while adding the profile photo");
-            return false;
+            return null;
         }
-        return true;
+        return modelMapper.map(partner, PartnerDTO.class);
     }
 
     @Override

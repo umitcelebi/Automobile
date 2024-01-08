@@ -49,10 +49,10 @@ public class PartnerController {
     }
 
     @PostMapping("/add-pp")
-    public ResponseEntity<String> addProfilePhoto(@RequestParam String uid, @RequestParam("photo") MultipartFile multipartFile) {
-        boolean isAdded = partnerFacade.addProfilePhoto(uid, multipartFile);
-        if (!isAdded) return ResponseEntity.badRequest().body("Fail");
-        return ResponseEntity.ok().body("Success");
+    public ResponseEntity<PartnerDTO> addProfilePhoto(@RequestParam(required = false) String uid, @RequestParam("file") MultipartFile multipartFile) {
+        PartnerDTO updatedPartner = partnerFacade.addProfilePhoto(uid, multipartFile);
+        if (updatedPartner == null) return ResponseEntity.status(400).body(null);
+        return ResponseEntity.ok().body(updatedPartner);
     }
 
 

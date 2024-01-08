@@ -105,7 +105,7 @@ class AddressFacadeImplTest {
                                 savedAddress.getLine())
                 );
         //When
-        AddressDTO result = underTest.save(addressDTO);
+        Address result = underTest.save(addressDTO);
 
         //Then
         then(addressService).should().save(address);

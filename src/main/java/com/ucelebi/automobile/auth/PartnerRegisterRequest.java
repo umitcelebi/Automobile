@@ -1,6 +1,7 @@
 package com.ucelebi.automobile.auth;
 
 import com.ucelebi.automobile.dto.AddressDTO;
+import com.ucelebi.automobile.dto.WorkingTimesDTO;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
 
@@ -16,7 +17,7 @@ public class PartnerRegisterRequest extends RegisterRequest{
     private Double longitude;
     private boolean sundayOpen;
     private List<String> sectors;
-    private List<String> openingTimes;
+    private List<WorkingTimesDTO> workingTimes;
     private AddressDTO address;
 
     public PartnerRegisterRequest() {}
@@ -24,13 +25,13 @@ public class PartnerRegisterRequest extends RegisterRequest{
     public PartnerRegisterRequest(String name, String displayName, String username, String password, Role role,
                                   String phoneNumber, String mail, UserType userType, Double latitude,
                                   Double longitude, boolean sundayOpen, List<String> sectors,
-                                  List<String> openingTimes, AddressDTO address) {
+                                  List<WorkingTimesDTO> workingTimes, AddressDTO address) {
         super(name, displayName, username, password, role, phoneNumber, mail, userType);
         this.latitude = latitude;
         this.longitude = longitude;
         this.sundayOpen = sundayOpen;
         this.sectors = sectors;
-        this.openingTimes = openingTimes;
+        this.workingTimes = workingTimes;
         this.address = address;
     }
 
@@ -66,12 +67,12 @@ public class PartnerRegisterRequest extends RegisterRequest{
         this.sectors = sectors;
     }
 
-    public List<String> getOpeningTimes() {
-        return openingTimes;
+    public List<WorkingTimesDTO> getWorkingTimes() {
+        return workingTimes;
     }
 
-    public void setOpeningTimes(List<String> openingTimes) {
-        this.openingTimes = openingTimes;
+    public void setWorkingTimes(List<WorkingTimesDTO> workingTimes) {
+        this.workingTimes = workingTimes;
     }
 
     public AddressDTO getAddress() {
