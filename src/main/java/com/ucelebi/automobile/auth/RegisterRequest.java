@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * User: ucelebi
@@ -27,7 +26,6 @@ public abstract class RegisterRequest {
     protected String mail;
     protected Role role;
     protected String phoneNumber;
-    protected MultipartFile profilePhoto;
     protected UserType userType;
 
     public RegisterRequest() {}
@@ -104,14 +102,6 @@ public abstract class RegisterRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public MultipartFile getProfilePhoto() {
-        return profilePhoto;
-    }
-
-    public void setProfilePhoto(MultipartFile profilePhoto) {
-        this.profilePhoto = profilePhoto;
     }
 
     public UserType getUserType() {

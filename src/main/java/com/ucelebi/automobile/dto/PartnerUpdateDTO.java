@@ -19,7 +19,7 @@ public class PartnerUpdateDTO {
     private Double latitude;
     private Double longitude;
     private List<String> sectors;
-    private List<String> openingTimes;
+    private List<WorkingTimesDTO> workingTimesDTOS;
     private List<ImageDTO> images;
     private AddressDTO address;
     private boolean sundayOpen;
@@ -36,7 +36,7 @@ public class PartnerUpdateDTO {
                             Double latitude,
                             Double longitude,
                             List<String> sectors,
-                            List<String> openingTimes,
+                            List<WorkingTimesDTO> workingTimesDTOS,
                             List<ImageDTO> images,
                             AddressDTO address,
                             boolean sundayOpen,
@@ -50,7 +50,7 @@ public class PartnerUpdateDTO {
         this.latitude = latitude;
         this.longitude = longitude;
         this.sectors = sectors;
-        this.openingTimes = openingTimes;
+        this.workingTimesDTOS = workingTimesDTOS;
         this.images = images;
         this.address = address;
         this.sundayOpen = sundayOpen;
@@ -111,11 +111,11 @@ public class PartnerUpdateDTO {
     public void setSectors(List<String> sectors) {
         this.sectors = sectors;
     }
-    public List<String> getOpeningTimes() {
-        return openingTimes;
+    public List<WorkingTimesDTO> getWorkingTimesDTOS() {
+        return workingTimesDTOS;
     }
-    public void setOpeningTimes(List<String> openingTimes) {
-        this.openingTimes = openingTimes;
+    public void setWorkingTimesDTOS(List<WorkingTimesDTO> workingTimesDTOS) {
+        this.workingTimesDTOS = workingTimesDTOS;
     }
     public List<ImageDTO> getImages() {
         return images;

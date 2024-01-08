@@ -8,6 +8,7 @@ import com.ucelebi.automobile.facade.AddressFacade;
 import com.ucelebi.automobile.facade.CityFacade;
 import com.ucelebi.automobile.facade.CountryFacade;
 import com.ucelebi.automobile.facade.TownFacade;
+import com.ucelebi.automobile.model.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -91,8 +92,8 @@ public class AddressController {
     }
 
     @PostMapping("/address/save")
-    public ResponseEntity<AddressDTO> saveAddress(@RequestBody AddressDTO addressDTO) {
-        AddressDTO savedAddress = addressFacade.save(addressDTO);
+    public ResponseEntity<Address> saveAddress(@RequestBody AddressDTO addressDTO) {
+        Address savedAddress = addressFacade.save(addressDTO);
         return ResponseEntity.ok().body(savedAddress);
     }
 

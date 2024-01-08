@@ -4,6 +4,7 @@ import com.ucelebi.automobile.auth.PartnerRegisterRequest;
 import com.ucelebi.automobile.dto.PartnerDTO;
 import com.ucelebi.automobile.dto.PartnerListDTO;
 import com.ucelebi.automobile.dto.PartnerUpdateDTO;
+import com.ucelebi.automobile.dto.WorkingTimesDTO;
 import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.enums.UserType;
 import com.ucelebi.automobile.utils.JsonMapperUtil;
@@ -23,7 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -224,7 +225,7 @@ class PartnerControllerTest {
                 42.567,
                 28.390,
                 null,
-                Arrays.asList("Haftaici 10:00 - 20:00", "Haftasonu 10:00 - 18:00"),
+                List.of(new WorkingTimesDTO("MONDAY", "08:00", "19:30")),
                 null,
                 null,
                 false,
@@ -260,7 +261,7 @@ class PartnerControllerTest {
                 42.567,
                 28.390,
                 null,
-                Arrays.asList("Haftaici 10:00 - 20:00", "Haftasonu 10:00 - 18:00"),
+                List.of(new WorkingTimesDTO("MONDAY", "08:00", "19:30")),
                 null,
                 null,
                 false,

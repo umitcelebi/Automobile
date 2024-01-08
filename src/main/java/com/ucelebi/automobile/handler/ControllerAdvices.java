@@ -30,7 +30,7 @@ public class ControllerAdvices {
     }
 
     @ExceptionHandler(value = { BadCredentialsException.class })
-    public ResponseEntity<Object> failLoginRequest(BadCredentialsException ex) {
+    public ResponseEntity<String> failLoginRequest(BadCredentialsException ex) {
         log.error("Kullanıcı girisi basarisiz. Bilgileri kontrol ediniz.");
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
@@ -44,12 +44,13 @@ public class ControllerAdvices {
     }
 
     @ExceptionHandler(value = { DataIntegrityViolationException.class })
-    public ResponseEntity<String> dataIntegrityViolationException() {
+    public ResponseEntity<String> dataIntegrityViolationException(DataIntegrityViolationException ex) {
+        log.error(ex);
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(value = { SQLIntegrityConstraintViolationException.class ,NullPointerException.class})
-    public ResponseEntity<Object> aestheticAppException(SQLIntegrityConstraintViolationException ex) {
+    public ResponseEntity<Object> sqlViolationAppException(SQLIntegrityConstraintViolationException ex) {
         log.error("Gerekli tum bilgiler girilmemis olabilir.");
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }

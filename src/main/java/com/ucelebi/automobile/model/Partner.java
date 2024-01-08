@@ -4,6 +4,7 @@ import com.ucelebi.automobile.enums.Role;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,8 +17,9 @@ public class Partner extends User{
     private Double longitude;
     private Boolean isSundayOpen;
     private Double userRating;
-    @ElementCollection
-    private List<String> openingTimes;
+    @OneToMany(mappedBy = "partner",
+            cascade = CascadeType.ALL)
+    private List<WorkingTimes> workingTimes;
     @OneToMany(mappedBy = "partner")
     private List<Image> images;
 
@@ -48,7 +50,7 @@ public class Partner extends User{
         this.longitude = builder.longitude;
         this.isSundayOpen = builder.isSundayOpen;
         this.userRating = builder.userRating;
-        this.openingTimes = builder.openingTimes;
+        this.workingTimes = builder.openingTimes;
         this.images = builder.images;
         this.sectors = builder.sectors;
         this.reviews = builder.reviews;
@@ -78,12 +80,14 @@ public class Partner extends User{
         this.longitude = longitude;
     }
 
-    public List<String> getOpeningTimes() {
-        return openingTimes;
+    public List<WorkingTimes> getWorkingTimes() {
+        if(this.workingTimes == null)
+            this.workingTimes = new ArrayList<>();
+        return workingTimes;
     }
 
-    public void setOpeningTimes(List<String> openingTimes) {
-        this.openingTimes = openingTimes;
+    public void setWorkingTimes(List<WorkingTimes> openingTimes) {
+        this.workingTimes = openingTimes;
     }
 
     public Boolean getSundayOpen() {
@@ -103,6 +107,8 @@ public class Partner extends User{
     }
 
     public List<Image> getImages() {
+        if(this.images == null)
+            this.images = new ArrayList<>();
         return images;
     }
 
@@ -111,6 +117,8 @@ public class Partner extends User{
     }
 
     public List<Sector> getSectors() {
+        if(sectors == null)
+            sectors = new ArrayList<>();
         return sectors;
     }
 
@@ -150,7 +158,7 @@ public class Partner extends User{
         private Double longitude;
         private Boolean isSundayOpen;
         private Double userRating;
-        private List<String> openingTimes;
+        private List<WorkingTimes> openingTimes;
         private List<Image> images;
         private List<Sector> sectors;
         private List<Review> reviews;
@@ -216,7 +224,7 @@ public class Partner extends User{
             this.userRating = userRating;
             return this;
         }
-        public builder openingTimes(List<String> openingTimes) {
+        public builder openingTimes(List<WorkingTimes> openingTimes) {
             this.openingTimes = openingTimes;
             return this;
         }
