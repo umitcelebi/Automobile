@@ -40,4 +40,12 @@ public class CustomerController {
         return ResponseEntity.ok().body(savedCustomer);
     }
 
+    @PostMapping("/add-favorite")
+    public ResponseEntity<String> addFavoritePartner(@RequestParam(name = "uid") String partnerUid) {
+        boolean iaAdded = customerFacade.addToFavorite(partnerUid);
+        if (iaAdded)
+            return ResponseEntity.ok().body("Success");
+        return ResponseEntity.badRequest().body("Fail");
+    }
+
 }

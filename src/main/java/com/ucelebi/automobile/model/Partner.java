@@ -29,8 +29,8 @@ public class Partner extends User{
     @OneToMany(mappedBy = "partner",fetch = FetchType.LAZY)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "partner")
-    private List<CustomerPartner> favoriteCustomers;
+    @ManyToMany(mappedBy = "favoritePartners")
+    private List<Customer> favoriteCustomers;
 
     public Partner() {}
 
@@ -134,11 +134,11 @@ public class Partner extends User{
         this.reviews = reviews;
     }
 
-    public List<CustomerPartner> getFavoriteCustomers() {
+    public List<Customer> getFavoriteCustomers() {
         return favoriteCustomers;
     }
 
-    public void setFavoriteCustomers(List<CustomerPartner> favoriteCustomers) {
+    public void setFavoriteCustomers(List<Customer> favoriteCustomers) {
         this.favoriteCustomers = favoriteCustomers;
     }
 
@@ -162,7 +162,7 @@ public class Partner extends User{
         private List<Image> images;
         private List<Sector> sectors;
         private List<Review> reviews;
-        private List<CustomerPartner> favoriteCustomers;
+        private List<Customer> favoriteCustomers;
 
         public builder creationTime(Timestamp creationTime) {
             this.creationTime = creationTime;
@@ -238,6 +238,10 @@ public class Partner extends User{
         }
         public builder review(List<Review> reviews) {
             this.reviews = reviews;
+            return this;
+        }
+        public builder favoriteCustomers(List<Customer> favoriteCustomers) {
+            this.favoriteCustomers = favoriteCustomers;
             return this;
         }
         public Partner build() {

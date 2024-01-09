@@ -2,9 +2,14 @@ package com.ucelebi.automobile.facade.impl;
 
 import com.ucelebi.automobile.dto.CustomerDTO;
 import com.ucelebi.automobile.dto.CustomerListDTO;
+import com.ucelebi.automobile.exception.PermissionException;
 import com.ucelebi.automobile.facade.CustomerFacade;
 import com.ucelebi.automobile.model.Customer;
+import com.ucelebi.automobile.model.Partner;
+import com.ucelebi.automobile.model.User;
 import com.ucelebi.automobile.service.CustomerService;
+import com.ucelebi.automobile.service.PartnerService;
+import com.ucelebi.automobile.util.ApplicationUtils;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +19,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Component
 public class CustomerFacadeImpl implements CustomerFacade {
     public static Logger log = Logger.getLogger(CustomerFacadeImpl.class);
     private final CustomerService customerService;
+    private final PartnerService partnerService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CustomerFacadeImpl(CustomerService customerService, ModelMapper modelMapper) {
+    public CustomerFacadeImpl(CustomerService customerService, PartnerService partnerService, ModelMapper modelMapper) {
         this.customerService = customerService;
+        this.partnerService = partnerService;
         this.modelMapper = modelMapper;
     }
 
@@ -91,5 +100,38 @@ public class CustomerFacadeImpl implements CustomerFacade {
         } catch (RuntimeException e) {
             log.error("Error while deleting customer", e);
         }
+    }
+
+    @Override
+    public boolean addToFavorite(String username) {
+        if(username == null || username.isEmpty())
+            return false;
+        try {
+            User currentUser = ApplicationUtils.getCurrentUser();
+            if (currentUser instanceof Partner)
+                throw new PermissionException("Partner cannot add a different partner to favorites.");
+
+
+            Optional<Partner> partnerOpt = partnerService.findByUid(username);
+            if (partnerOpt.isEmpty()) {
+                log.error("Partner could not found for favorite.");
+                return false;
+            }
+            Predicate<Customer> predicate = c -> Objects.equals(c.getId(), currentUser.getId());
+            boolean isExist = partnerOpt.get().getFavoriteCustomers().stream().anyMatch(predicate);
+            if (isExist){
+                log.error("Partner could not be added to favorites. Already added to favorites.");
+                return false;
+            }
+            Customer customer = (Customer) currentUser;
+            customer.getFavoritePartners().add(partnerOpt.get());
+
+            customerService.update(customer);
+        }catch (PermissionException e) {
+            log.error("You are not allowed to perform this action. ", e);
+            throw e;
+        }
+
+        return false;
     }
 }

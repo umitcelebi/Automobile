@@ -15,4 +15,5 @@ public interface CustomerFacade {
     CustomerDTO update(CustomerDTO entity);
     void delete(CustomerDTO entity);
     void deleteByUid(String uid);
+    boolean addToFavorite(String username);
 }

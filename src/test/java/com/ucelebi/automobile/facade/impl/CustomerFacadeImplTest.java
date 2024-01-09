@@ -6,6 +6,7 @@ import com.ucelebi.automobile.enums.Role;
 import com.ucelebi.automobile.facade.CustomerFacade;
 import com.ucelebi.automobile.model.Customer;
 import com.ucelebi.automobile.service.CustomerService;
+import com.ucelebi.automobile.service.PartnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -41,12 +42,14 @@ class CustomerFacadeImplTest {
     @Mock
     private CustomerService customerService;
     @Mock
+    private PartnerService partnerService;
+    @Mock
     private ModelMapper modelMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        underTest = new CustomerFacadeImpl(customerService, modelMapper);
+        underTest = new CustomerFacadeImpl(customerService, partnerService, modelMapper);
     }
 
     @Test

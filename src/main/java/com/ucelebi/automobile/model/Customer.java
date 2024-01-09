@@ -3,6 +3,7 @@ package com.ucelebi.automobile.model;
 import com.ucelebi.automobile.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 import java.sql.Timestamp;
@@ -28,8 +29,8 @@ public class Customer extends User{
     @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "customer")
-    private List<CustomerPartner> favoritePartners;
+    @ManyToMany(mappedBy = "customers")
+    private List<Partner> favoritePartners;
 
     @OneToMany(mappedBy = "customer")
     private List<BlogCustomerRelation> favoriteBlogs;
@@ -41,11 +42,11 @@ public class Customer extends User{
         this.reviews = reeviews;
     }
 
-    public List<CustomerPartner> getFavoritePartners() {
+    public List<Partner> getFavoritePartners() {
         return favoritePartners;
     }
 
-    public void setFavoritePartners(List<CustomerPartner> favoritePartners) {
+    public void setFavoritePartners(List<Partner> favoritePartners) {
         this.favoritePartners = favoritePartners;
     }
 
